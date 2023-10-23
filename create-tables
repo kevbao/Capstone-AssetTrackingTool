@@ -1,0 +1,73 @@
+CREATE TABLE Accessory (
+    Accessory_id SERIAL PRIMARY KEY,
+    Name VARCHAR(40),
+    Description VARCHAR(255),
+    Category VARCHAR(40),
+    Model VARCHAR(40),
+    Total VARCHAR(40),
+    numCheckedOut VARCHAR(40)
+);
+
+CREATE TABLE Asset (
+    Serial SERIAL PRIMARY KEY,
+    Name VARCHAR(40),
+    VersionHistory VARCHAR(40),
+    Type VARCHAR(40),
+    AssetTag SERIAL PRIMARY KEY,
+    Catagory VARCHAR(40),
+    Status VARCHAR(40),
+    Cost VARCHAR(40),
+    Deployed VARCHAR(40)
+);
+
+CREATE TABLE Location (
+    Location_id SERIAL PRIMARY KEY,
+    Name VARCHAR(60),
+    Description VARCHAR(255),
+    LocationType VARCHAR(60)
+);
+
+CREATE TABLE Member (
+    GD_id SERIAL PRIMARY KEY,
+    Name VARCHAR(50),
+    permissions VARCHAR(50),
+    email VARCHAR(50),
+    history VARCHAR(50),
+    group VARCHAR(50)
+    check_in_time VARCHAR(40),
+);
+
+CREATE TABLE MemberAsset (
+    Member_id INTEGER REFERENCES Member(Member_id),
+    Serial INTEGER REFERENCES Serial(Serial),
+    PRIMARY KEY (Member_id, Serial),
+    
+);
+
+CREATE TABLE LocationAsset (
+    Location_id INTEGER REFERENCES Location(Location_id),
+    Serial INTEGER REFERENCES Serial(Serial),
+    PRIMARY KEY (Location_id, Serial)
+);
+
+CREATE TABLE AssetAccessory (
+    Serial INTEGER REFERENCES Serial(Serial),
+    Accessory_id INTEGER REFERENCES Accessory(Accessory_id),
+    PRIMARY KEY (Serial, Accessory_id)
+);
+
+CREATE TABLE MemberAssetHistory (
+    GD_id INTEGER REFERENCES GD_id(GD_id),
+    Serial INTEGER REFERENCES Serial(Serial),
+    Check_In_Date DATE,
+    Check_Out_Date DATE,
+    PRIMARY KEY (GD_id, Serial, Date)
+);
+
+CREATE TABLE LocationAssetHistory (
+    Location_id INTEGER REFERENCES Location(Location_id),
+    Asset_id INTEGER REFERENCES Asset(Asset_id),
+    Date DATE,
+    PRIMARY KEY (Location_id, Asset_id, Date)
+);
+
