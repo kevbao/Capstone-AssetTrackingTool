@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Filter Example</title>
+</head>
+<body>
+    <input type="text" id="searchInput" placeholder="Search">
+    
+    <ul id="results">
+        <li>Zoe</li>
+        <li>Miles</li>
+        <li>Stephen</li>
+        <li>Sid</li>
+        <li>Kevin</li>
+        <li>John</li>
+        <li>Jane</li>
+    </ul>
+
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const search = this.value.toLowerCase();
+            const items = document.querySelectorAll('#results li');
+
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(search)) {
+                    item.style.display = 'list-item';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
