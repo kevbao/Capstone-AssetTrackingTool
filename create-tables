@@ -5,17 +5,22 @@ CREATE TABLE Accessory (
     Category VARCHAR(40),
     Model VARCHAR(40),
     Total VARCHAR(40),
-    numCheckedOut VARCHAR(40)
+    numCheckedOut VARCHAR(40),
+    cost VARCHAR(40)
 );
 
-CREATE TABLE Asset (
-    Serial SERIAL PRIMARY KEY,
-    Name VARCHAR(40),
+CREATE TABLE Asset ( 
+    Asset_ID SERIAL PRIMARY KEY,
+    Asset_Name VARCHAR(40),
+    Asset_Tag VARCHAR(40),
     VersionHistory VARCHAR(40),
+    Current_Image VARCHAR(40),
+    Model VARCHAR(40)
     Type VARCHAR(40),
     AssetTag SERIAL PRIMARY KEY,
     Catagory VARCHAR(40),
     Status VARCHAR(40),
+    Purchase_Date VARCHAR(40)
     Cost VARCHAR(40),
     Deployed VARCHAR(40)
 );
@@ -23,6 +28,7 @@ CREATE TABLE Asset (
 CREATE TABLE Location (
     Location_id SERIAL PRIMARY KEY,
     Name VARCHAR(60),
+    GD_specific_location VARCHAR(40)
     Description VARCHAR(255),
     LocationType VARCHAR(60)
 );
@@ -30,38 +36,41 @@ CREATE TABLE Location (
 CREATE TABLE Member (
     GD_id SERIAL PRIMARY KEY,
     Name VARCHAR(50),
-    permissions VARCHAR(50),
-    email VARCHAR(50),
-    history VARCHAR(50),
-    group VARCHAR(50)
-    check_in_time VARCHAR(40),
+    Permissions VARCHAR(50),
+    Email VARCHAR(50),
+    History VARCHAR(50),
+    Group VARCHAR(50),
+    Department VARCHAR(50),
+    Manager VARCHAR(50),
+    Check_in_time VARCHAR(40),
+    Lisenses 
 );
 
 CREATE TABLE MemberAsset (
     Member_id INTEGER REFERENCES Member(Member_id),
-    Serial INTEGER REFERENCES Serial(Serial),
-    PRIMARY KEY (Member_id, Serial),
+    Asset_ID INTEGER REFERENCES Asset(Asset_ID),
+    PRIMARY KEY (Member_id, Asset_ID),
     
 );
 
 CREATE TABLE LocationAsset (
     Location_id INTEGER REFERENCES Location(Location_id),
-    Serial INTEGER REFERENCES Serial(Serial),
-    PRIMARY KEY (Location_id, Serial)
+    Asset_ID INTEGER REFERENCES Asset(Asset_ID),
+    PRIMARY KEY (Location_id, Asset_ID)
 );
 
 CREATE TABLE AssetAccessory (
-    Serial INTEGER REFERENCES Serial(Serial),
+    Asset_ID INTEGER REFERENCES Asset(Asset_ID),
     Accessory_id INTEGER REFERENCES Accessory(Accessory_id),
-    PRIMARY KEY (Serial, Accessory_id)
+    PRIMARY KEY (Asset_ID, Accessory_id)
 );
 
 CREATE TABLE MemberAssetHistory (
     GD_id INTEGER REFERENCES GD_id(GD_id),
-    Serial INTEGER REFERENCES Serial(Serial),
+    Asset_ID INTEGER REFERENCES Asset(Asset_ID),
     Check_In_Date DATE,
     Check_Out_Date DATE,
-    PRIMARY KEY (GD_id, Serial, Date)
+    PRIMARY KEY (GD_id, Asset_ID, Date)
 );
 
 CREATE TABLE LocationAssetHistory (
