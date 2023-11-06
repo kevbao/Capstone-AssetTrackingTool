@@ -89,7 +89,7 @@
     <!-- Navigation Menu -->
     <nav>
         <ul>
-            <li><a href="userDashboard.html">Dashboard</a></li>
+            <li><a href="UserDashboard.html">Dashboard</a></li>
             <li><a href="asset.html">Assets</a></li>
             <li><a href="#">Users</a></li>
             <li><a href="#">Settings</a></li>
