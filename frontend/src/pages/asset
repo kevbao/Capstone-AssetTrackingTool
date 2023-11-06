@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Asset Management</title>
+    <style>
+        /* Reset some default styles for better consistency */
+        body, h1, p {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 {
+            font-size: 32px;
+        }
+
+        /* Main Content Styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Asset Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        /* Asset Actions Styles */
+        .asset-actions {
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Status Styles */
+        .status-ready {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .status-pending {
+            background-color: #f3b53f;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Asset Management</h1>
+    </header>
+
+    <!-- Navigation Menu -->
+    <nav>
+        <ul>
+            <li><a href="userDashboard.html">Dashboard</a></li>
+            <li><a href="asset.html">Assets</a></li>
+            <li><a href="#">Users</a></li>
+            <li><a href="#">Settings</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Asset List</h2>
+
+        <!-- Asset Table with Checkboxes -->
+        <table>
+            <tr>
+                <th>Select</th>
+                <th>Asset Name</th>
+                <th>Asset Type</th>
+                <th>Serial Number</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Laptop 1</td>
+                <td>Laptop</td>
+                <td>SN12345</td>
+                <td>Office 1</td>
+                <td><span class="status-ready">Ready to Deploy</span></td>
+                <td>
+                    <button class="btn">Checkout</button>
+                    <button class="btn">Check-in</button>
+                    <button class="btn">Clone</button>
+                    <button class="btn">Update</button>
+                    <button class="btn">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Monitor 1</td>
+                <td>Monitor</td>
+                <td>SN67890</td>
+                <td>Office 2</td>
+                <td><span class="status-pending">Pending</span></td>
+                <td>
+                    <button class="btn">Checkout</button>
+                    <button class="btn">Check-in</button>
+                    <button class="btn">Clone</button>
+                    <button class="btn">Update</button>
+                    <button class="btn">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Phone 1</td>
+                <td>Phone</td>
+                <td>SN12345</td>
+                <td>Office 1</td>
+                <td><span class="status-pending">Pending</span></td>
+                <td>
+                    <button class="btn">Checkout</button>
+                    <button class="btn">Check-in</button>
+                    <button class="btn">Clone</button>
+                    <button class="btn">Update</button>
+                    <button class="btn">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Laptop 2</td>
+                <td>Laptop</td>
+                <td>SN12345</td>
+                <td>Office 1</td>
+                <td><span class="status-ready">Ready to Deploy</span></td>
+                <td>
+                    <button class="btn">Checkout</button>
+                    <button class="btn">Check-in</button>
+                    <button class="btn">Clone</button>
+                    <button class="btn">Update</button>
+                    <button class="btn">Delete</button>
+                </td>
+            </tr>
+            <tr>
+                <td><input type="checkbox"></td>
+                <td>Monitor 2</td>
+                <td>Monitor</td>
+                <td>SN12345</td>
+                <td>Office 2</td>
+                <td><span class="status-ready">Ready to Deploy</span></td>
+                <td>
+                    <button class="btn">Checkout</button>
+                    <button class="btn">Check-in</button>
+                    <button class="btn">Clone</button>
+                    <button class="btn">Update</button>
+                    <button class="btn">Delete</button>
+                </td>
+            </tr>
+            <!-- Add more asset rows as needed -->
+        </table>
+    </div>
+</body>
+</html>
