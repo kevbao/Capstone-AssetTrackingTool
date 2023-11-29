@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 function App() {
   const [data, setData] = useState([])
   useEffect(()=> {
-    fetch('http://localhost:8081/Asset')
+    fetch('http://localhost:8081/Asset') //App runs on localhost:3000, database is on localhost:8081, both have to be running in 2 different terminals.
     .then(res => res.json())
     .then(data => setData(data))
     .catch(err => console.log(err));
