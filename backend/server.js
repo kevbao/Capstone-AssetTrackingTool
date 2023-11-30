@@ -24,7 +24,7 @@ const db = mysql.createConnection({
 })
 
 app.get('/', (re, res) => {
-    return res.json("From Backend Side");
+    return res.json("This is our Database Server");
 })
 
 app.get('/Asset', (req, res) => {
