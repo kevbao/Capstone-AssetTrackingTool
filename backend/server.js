@@ -35,6 +35,30 @@ app.get('/Asset', (req, res) => {
     })
 })
 
+app.get('/Member', (req, res) => {
+    const sql = "SELECT * FROM Member";
+    db.query(sql, (err, data) => {
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
+
+app.get('/Location', (req, res) => {
+    const sql = "SELECT * FROM Location";
+    db.query(sql, (err, data) => {
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
+
+app.get('/Accessory', (req, res) => {
+    const sql = "SELECT * FROM Accessory";
+    db.query(sql, (err, data) => {
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
+
 app.post('/addAsset', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
 
