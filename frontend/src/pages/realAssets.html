@@ -3,24 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <title>Data Table</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f5f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      font-size: 14px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4285f4;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      overflow-x: auto; /* Enable horizontal scrolling if needed */
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f9ff;
+      font-weight: bold;
+      color: #4285f4;
+    }
+
+    tr:nth-child(even) {
+      background-color: #edf3f9;
+    }
+
+    tr:hover {
+      background-color: #dae5f0;
+    }
+  </style>
 </head>
 <body>
-  <div style="padding: 50px;">
+  <div class="container">
+    <h1>Assets</h1>
     <table>
       <thead>
-        <th>Asset_ID</th>
-        <th>Asset_Name</th>
-        <th>Asset_Tag</th>
-        <th>VersionHistory</th>
-        <th>Current_Image</th>
-        <th>Model</th>
-        <th>Type</th>
-        <th>AssetTag</th>
-        <th>Category</th>
-        <th>Status</th>
-        <th>Purchase_Date</th>
-        <th>Cost</th>
-        <th>Deployed</th>
+        <tr>
+          <th>Asset ID</th>
+          <th>Asset Name</th>
+          <th>Asset Tag</th>
+          <th>Version History</th>
+          <th>Current Image</th>
+          <th>Model</th>
+          <th>Type</th>
+          <th>AssetTag</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Purchase Date</th>
+          <th>Cost</th>
+          <th>Deployed</th>
+        </tr>
       </thead>
       <tbody id="tableBody"></tbody>
     </table>

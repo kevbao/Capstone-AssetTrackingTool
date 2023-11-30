@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Asset</title>
+  <!-- Your CSS styles -->
+  <style>
+    /* ... */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Add New Asset</h1>
+    <form id="newAssetForm">
+      <!-- Input fields for asset attributes -->
+      <label for="assetName">Asset Name:</label>
+      <input type="text" id="assetName" name="Asset_Name"><br>
+
+      <label for="assetTag">Asset Tag:</label>
+      <input type="text" id="assetTag" name="Asset_Tag"><br>
+
+      <label for="versionHistory">Version History:</label>
+      <input type="text" id="versionHistory" name="VersionHistory"><br>
+
+      <label for="currentImage">Current Image:</label>
+      <input type="text" id="currentImage" name="Current_Image"><br>
+
+      <label for="model">Model:</label>
+      <input type="text" id="model" name="Model"><br>
+
+      <label for="type">Type:</label>
+      <input type="text" id="type" name="Type"><br>
+
+      <label for="assetTag2">AssetTag:</label>
+      <input type="text" id="assetTag2" name="AssetTag"><br>
+
+      <label for="category">Category:</label>
+      <input type="text" id="category" name="Category"><br>
+
+      <label for="status">Status:</label>
+      <input type="text" id="status" name="Status"><br>
+
+      <label for="purchaseDate">Purchase Date:</label>
+      <input type="text" id="purchaseDate" name="Purchase_Date"><br>
+
+      <label for="cost">Cost:</label>
+      <input type="text" id="cost" name="Cost"><br>
+
+      <label for="deployed">Deployed:</label>
+      <input type="text" id="deployed" name="Deployed"><br>
+
+      <button type="submit">Add Asset</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const newAssetForm = document.getElementById("newAssetForm");
+
+        newAssetForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const formData = {
+                Asset_Name: document.getElementById('assetName').value,
+                Asset_Tag: document.getElementById('assetTag').value,
+                VersionHistory: document.getElementById('versionHistory').value,
+                Current_Image: document.getElementById('currentImage').value,
+                Model: document.getElementById('model').value,
+                Type: document.getElementById('type').value,
+                AssetTag: document.getElementById('assetTag2').value,
+                Category: document.getElementById('category').value,
+                Status: document.getElementById('status').value,
+                Purchase_Date: document.getElementById('purchaseDate').value,
+                Cost: document.getElementById('cost').value,
+                Deployed: document.getElementById('deployed').value
+            };
+
+            console.log(formData); // Verify if the object contains the form data
+
+            fetch('http://localhost:8081/addAsset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                newAssetForm.reset();
+            })
+            .catch(err => console.error(err));
+        });
+    });
+  </script>
+</body>
+</html>
