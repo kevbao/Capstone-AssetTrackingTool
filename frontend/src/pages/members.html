@@ -54,6 +54,8 @@
     <body>
     <div class="container">
         <h1>Members</h1>
+        <!-- Search input -->
+        <input type="text" id="searchInput" placeholder="Search by Member Name">
         <table>
         <thead>
             <tr>
@@ -72,6 +74,22 @@
     </div>
 
     <script>
+
+        document.getElementById('searchInput').addEventListener('input', function() {
+          const search = this.value.toLowerCase();
+          const rows = document.querySelectorAll('#tableBody tr');
+
+          rows.forEach(row => {
+            const memberName = row.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Assuming Member Name is in the second column (index 1)
+            
+            if (memberName.includes(search)) {
+              row.style.display = 'table-row';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
         const tableBody = document.getElementById("tableBody");
 

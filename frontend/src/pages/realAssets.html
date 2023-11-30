@@ -54,6 +54,8 @@
 <body>
   <div class="container">
     <h1>Assets</h1>
+    <!-- Search input -->
+    <input type="text" id="searchInput" placeholder="Search by Asset Name">
     <table>
       <thead>
         <tr>
@@ -77,6 +79,22 @@
   </div>
 
   <script>
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const search = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#tableBody tr');
+
+      rows.forEach(row => {
+        const assetName = row.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Assuming Asset Name is in the second column (index 1)
+        
+        if (assetName.includes(search)) {
+          row.style.display = 'table-row';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
       const tableBody = document.getElementById("tableBody");
 
