@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Asset List</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f0f5f9;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+      font-size: 14px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #4285f4;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+      overflow-x: auto; /* Enable horizontal scrolling if needed */
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f9ff;
+      font-weight: bold;
+      color: #4285f4;
+    }
+
+    tr:nth-child(even) {
+      background-color: #edf3f9;
+    }
+
+    tr:hover {
+      background-color: #dae5f0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Assets</h1>
+    <!-- Search input -->
+    <input type="text" id="searchInput" placeholder="Search by Asset Name">
+    <table>
+      <thead>
+        <tr>
+          <th>Asset ID</th>
+          <th>Asset Name</th>
+          <th>Asset Tag</th>
+          <th>Version History</th>
+          <th>Current Image</th>
+          <th>Model</th>
+          <th>Type</th>
+          <th>AssetTag</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Purchase Date</th>
+          <th>Cost</th>
+          <th>Deployed</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
+
+  <script>
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const search = this.value.toLowerCase();
+      const rows = document.querySelectorAll('#tableBody tr');
+
+      rows.forEach(row => {
+        const assetName = row.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Assuming Asset Name is in the second column (index 1)
+        
+        if (assetName.includes(search)) {
+          row.style.display = 'table-row';
+        } else {
+          row.style.display = 'none';
+        }
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const tableBody = document.getElementById("tableBody");
+
+      fetch('http://localhost:8081/Asset')
+        .then(res => res.json())
+        .then(data => {
+          data.forEach(d => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${d.Asset_ID}</td>
+              <td>${d.Asset_Name}</td>
+              <td>${d.Asset_Tag}</td>
+              <td>${d.VersionHistory}</td>
+              <td>${d.Current_Image}</td>
+              <td>${d.Model}</td>
+              <td>${d.Type}</td>
+              <td>${d.AssetTag}</td>
+              <td>${d.Category}</td>
+              <td>${d.Status}</td>
+              <td>${d.Purchase_Date}</td>
+              <td>${d.Cost}</td>
+              <td>${d.Deployed}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(err => console.error(err));
+    });
+  </script>
+</body>
+</html>
