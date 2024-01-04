@@ -1,3 +1,7 @@
+//THIS IS THE BACKEND SERVER
+//********************************************************************************************* 
+// DECLARE CONSTANTS AND DATABASE CONNECTIONS 
+// ********************************************************************************************
 const express = require('express');
 const mysql = require('mysql')
 const cors = require('cors')
@@ -27,6 +31,9 @@ app.get('/', (re, res) => {
     return res.json("This is our Database Server");
 })
 
+// ******************************************************************************************
+// RETRIEVE ALL DATA FROM TABLES 
+// ******************************************************************************************
 app.get('/Asset', (req, res) => {
     const sql = "SELECT * FROM Asset";
     db.query(sql, (err, data) => {
@@ -58,7 +65,14 @@ app.get('/Accessory', (req, res) => {
         return res.json(data);
     })
 })
+// Add more tables here when created.
 
+// ******************************************************************************************
+// FUNCTIONS CONNECTING FRONTEND TO BACKEND
+// ******************************************************************************************
+
+// Connection to frontend: This function takes input data from the form inside addAsset.html
+// then adds a new asset to the database on the backend side.
 app.post('/addAsset', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
 
@@ -92,8 +106,10 @@ app.post('/addAsset', (req, res) => {
     });
     
 });
+// TODO: - Create functions for adding to locations table, members table, accessories table
+//       - Create functions for deleting from all of them
 
-
+// Listen on Port 8081
 app.listen(port, ()=> {
     console.log("LISTENING")
 })
