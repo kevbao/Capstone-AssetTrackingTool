@@ -106,6 +106,31 @@ app.post('/addAsset', (req, res) => {
     });
     
 });
+
+app.post('/addLocation', (req, res) => {
+    const formData = req.body; // Retrieve the entire form data object
+
+    console.log(formData); // Verify if formData is received correctly
+
+    const sql = `INSERT INTO Location 
+                (Name, Description, LocationType) 
+                VALUES (?, ?, ?)`;
+
+    const values = [
+        formData.Name,
+        formData.Description,
+        formData.LocationType,
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            //console.error('Database query error:', err); // Log the specific database query error
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Location added successfully' });
+    });
+    
+});
 // TODO: - Create functions for adding to locations table, members table, accessories table
 //       - Create functions for deleting from all of them
 
