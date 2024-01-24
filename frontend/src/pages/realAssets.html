@@ -79,14 +79,13 @@
   </div>
 
   <script>
-
-    document.getElementById('searchInput').addEventListener('input', function() {
+    document.getElementById('searchInput').addEventListener('input', function () {
       const search = this.value.toLowerCase();
       const rows = document.querySelectorAll('#tableBody tr');
-
+  
       rows.forEach(row => {
         const assetName = row.querySelector('td:nth-child(2)').textContent.toLowerCase(); // Assuming Asset Name is in the second column (index 1)
-        
+  
         if (assetName.includes(search)) {
           row.style.display = 'table-row';
         } else {
@@ -94,13 +93,16 @@
         }
       });
     });
-
-    document.addEventListener("DOMContentLoaded", () => {
+  
+    // Declare fetchAssetData function before deleteAsset
+    function fetchAssetData() {
       const tableBody = document.getElementById("tableBody");
-
+  
+      // Function to fetch asset data from the backend and populate the table
       fetch('http://localhost:8081/Asset')
         .then(res => res.json())
         .then(data => {
+          tableBody.innerHTML = ""; // Clear existing rows
           data.forEach(d => {
             const row = document.createElement("tr");
             row.innerHTML = `
@@ -117,12 +119,36 @@
               <td>${d.Purchase_Date}</td>
               <td>${d.Cost}</td>
               <td>${d.Deployed}</td>
+              <td><button onclick="deleteAsset(${d.Asset_ID})">Delete</button></td>
             `;
             tableBody.appendChild(row);
           });
         })
         .catch(err => console.error(err));
+    }
+  
+    const deleteAsset = (assetID) => {
+      console.log(`Delete button clicked for asset ID: ${assetID}`);
+  
+      // Function to delete asset by sending a request to the backend
+      fetch(`http://localhost:8081/deleteAsset/${assetID}`, {
+        method: 'DELETE',
+      })
+        .then(res => res.json())
+        .then(data => {
+          // Assuming the backend returns a message
+          console.log(data.message);
+          // Refresh the table after deletion
+          fetchAssetData();
+        })
+        .catch(err => console.error(err));
+    };
+  
+    document.addEventListener("DOMContentLoaded", () => {
+      // Fetch asset data on page load
+      fetchAssetData();
     });
   </script>
 </body>
 </html>
+  

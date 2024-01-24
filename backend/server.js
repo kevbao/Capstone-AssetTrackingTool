@@ -107,6 +107,19 @@ app.post('/addAsset', (req, res) => {
     
 });
 
+app.delete('/deleteAsset/:id', (req, res) => {
+    const assetID = req.params.id;
+    const sql = "DELETE FROM Asset WHERE Asset_ID = ?";
+
+    db.query(sql, [assetID], (err, result) => {
+        if (err) {
+        console.error('Database query error:', err);
+        return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Asset deleted successfully' });
+    });
+});
+
 app.post('/addLocation', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
 
