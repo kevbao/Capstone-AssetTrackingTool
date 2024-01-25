@@ -9,6 +9,7 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
+
             "name": "AssetTracking",
             "database": "asset_tracking",
             "username": "root",
