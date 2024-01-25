@@ -14,7 +14,7 @@ const UserDashboard = () => {
 
   return (
     <div>
-      <header>
+      <header className="dashboard-header">
         <h1 className="dashboard-h1">User Dashboard</h1>
       </header>
 

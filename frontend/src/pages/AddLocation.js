@@ -39,8 +39,8 @@ const AddLocation = () => {
 
   return (
     <div className="location-wrapper">
-      <header>
-        <h1 className="title">Add New Location</h1>
+      <header className="location-header">
+        <h1 className="location-title">Add New Location</h1>
       </header>
       <div className="location-container">
         <form id="newLocationForm" onSubmit={handleSubmit} className="location-form">

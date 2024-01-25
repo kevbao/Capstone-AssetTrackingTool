@@ -76,6 +76,14 @@ body, .dashboard-h1, p {
     margin-bottom: 20px;
 }
 
+.dashboard-header {
+    background-color: #7392b3;
+    color: #fff;
+    padding: 15px 0;
+    text-align: center;
+    border-radius: 8px 8px 0 0;
+}
+
 .dashboard-location-table, .dashboard-location-table th, .dashboard-location-table td {
     border: 1px solid #ccc;
 }
