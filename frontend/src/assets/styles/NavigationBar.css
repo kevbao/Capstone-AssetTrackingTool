@@ -1,6 +1,10 @@
 /* NavigationBar.css */
 .navbar {
-    background-color: #333;
+    background-color: #698cff;
+    padding: 10px;
+    font-weight: medium;
+    font-size: larger; /* change this because it is misplaced */
+    text-align: center;
     padding: 10px;
   }
   
@@ -24,4 +28,8 @@
   .nav-item a:hover {
     border-bottom: 2px solid white;
   }
-  
+
+nav ul li {
+  display: inline;
+  margin: 0 15px;
+}

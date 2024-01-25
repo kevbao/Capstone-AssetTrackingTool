@@ -24,7 +24,7 @@ const db = mysql.createConnection({
     host: "localhost",
     user: 'root',
     password: '', //set password to empty for your mysql root user as well, see above comment
-    database: 'test_schema' // change this to the name of your own schema which should be asset_tracking
+    database: 'asset_tracking' // change this to the name of your own schema which should be asset_tracking
 })
 
 app.get('/', (re, res) => {
