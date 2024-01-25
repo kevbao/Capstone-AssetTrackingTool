@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .profile-picture {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+
+        .user-details {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .user-details span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="profile-container">
+    <img class="profile-picture" src="profile-picture.jpg" alt="Profile Picture">
+    <h2 class="user-details">GDMS Employee</h2>
+    <p class="user-details"><span>Name:</span> John Doe</p>
+    <p class="user-details"><span>Email:</span> john.doe@example.com</p>
+    <p class="user-details"><span>Location:</span> Tempe, AZ</p>
+    <!-- Add more user details as needed -->
+</div>
+
+</body>
+</html>
