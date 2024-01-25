@@ -9,10 +9,11 @@
             "server": "localhost",
             "port": 3306,
             "driver": "MySQL",
-            "name": "Asset Tracking",
+
+            "name": "AssetTracking",
             "database": "asset_tracking",
             "username": "root",
-            "password": "1090"
+            "password": ""
         }
     ]
 }

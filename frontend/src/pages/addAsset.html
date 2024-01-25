@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add New Asset</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .wrapper {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    header {
+      background-color: #007bff;
+      color: #fff;
+      padding: 15px 0;
+      text-align: center;
+      border-radius: 8px 8px 0 0;
+    }
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1, h2 {
+      text-align: center;
+      margin-top: 0;
+      color: #333;
+    }
+    form {
+      display: grid;
+      grid-gap: 15px;
+    }
+    label {
+      font-weight: bold;
+      color: #555;
+    }
+    input[type="text"] {
+      width: calc(100% - 16px);
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header>
+      <h1>Asset Management</h1>
+    </header>
+    <div class="container">
+      <h2>Add New Asset</h2>
+      <form id="newAssetForm">
+        <label for="assetName">Asset Name:</label>
+        <input type="text" id="assetName" name="Asset_Name">
+
+        <label for="assetTag">Asset Tag:</label>
+        <input type="text" id="assetTag" name="Asset_Tag">
+
+        <label for="versionHistory">Version History:</label>
+        <input type="text" id="versionHistory" name="VersionHistory">
+
+        <label for="currentImage">Current Image:</label>
+        <input type="text" id="currentImage" name="Current_Image">
+
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="Model">
+
+        <label for="type">Type:</label>
+        <input type="text" id="type" name="Type">
+
+        <label for="assetTag2">Asset Tag 2:</label>
+        <input type="text" id="assetTag2" name="AssetTag">
+
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="Category">
+
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="Status">
+
+        <label for="purchaseDate">Purchase Date:</label>
+        <input type="text" id="purchaseDate" name="Purchase_Date">
+
+        <label for="cost">Cost:</label>
+        <input type="text" id="cost" name="Cost">
+
+        <label for="deployed">Deployed:</label>
+        <input type="text" id="deployed" name="Deployed">
+
+        <button type="submit">Add Asset</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const newAssetForm = document.getElementById("newAssetForm");
+
+        newAssetForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const formData = {
+                Asset_Name: document.getElementById('assetName').value,
+                Asset_Tag: document.getElementById('assetTag').value,
+                VersionHistory: document.getElementById('versionHistory').value,
+                Current_Image: document.getElementById('currentImage').value,
+                Model: document.getElementById('model').value,
+                Type: document.getElementById('type').value,
+                AssetTag: document.getElementById('assetTag2').value,
+                Category: document.getElementById('category').value,
+                Status: document.getElementById('status').value,
+                Purchase_Date: document.getElementById('purchaseDate').value,
+                Cost: document.getElementById('cost').value,
+                Deployed: document.getElementById('deployed').value
+            };
+
+            console.log(formData); // Verify if the object contains the form data
+
+            fetch('http://localhost:8081/addAsset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                newAssetForm.reset();
+            })
+            .catch(err => console.error(err));
+        });
+    });
+  </script>
+</body>
+</html>
