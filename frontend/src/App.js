@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import AddAsset from './pages/AddAsset';
 import AddLocation from './pages/AddLocation';
 import UserDashboard from './pages/UserDashboard';
+import Members from './pages/Members';
 
 import AssetTable from './components/AssetTable';
 import NavigationBar from './components/NavigationBar';
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/add" element={<AddAsset />} />
           <Route path="/dashboard" element={<UserDashboard />} />
           <Route path="/addlocation" element={<AddLocation />} />
+          <Route path="/members" element={<Members />} />
         </Routes>
       </div>
     </Router>
