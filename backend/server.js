@@ -6,14 +6,18 @@ const express = require('express');
 const mysql = require('mysql')
 const cors = require('cors')
 
+// Create an Express application
 const app = express()
 app.use(cors())
 
+// Middleware to parse incoming requests
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(express.json()); // Parse JSON bodies
 
+// Define the port number
 const port = 8081
 
+// Create a database connection
 /*in order to get this to work: run these in terminal:
 mysql -u root -p
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';
@@ -27,13 +31,12 @@ const db = mysql.createConnection({
     database: 'asset_tracking'
 })
 
+// Route for the root endpoint
 app.get('/', (re, res) => {
     return res.json("This is our Database Server");
 })
 
-// ******************************************************************************************
-// RETRIEVE ALL DATA FROM TABLES 
-// ******************************************************************************************
+// Retrieve all data from the Asset table
 app.get('/Asset', (req, res) => {
     const sql = "SELECT * FROM Asset";
     db.query(sql, (err, data) => {
@@ -42,6 +45,7 @@ app.get('/Asset', (req, res) => {
     })
 })
 
+// Retrieve all data from the Member table
 app.get('/Member', (req, res) => {
     const sql = "SELECT * FROM Member";
     db.query(sql, (err, data) => {
@@ -50,6 +54,7 @@ app.get('/Member', (req, res) => {
     })
 })
 
+// Retrieve all data from the Location table
 app.get('/Location', (req, res) => {
     const sql = "SELECT * FROM Location";
     db.query(sql, (err, data) => {
@@ -58,6 +63,7 @@ app.get('/Location', (req, res) => {
     })
 })
 
+// Retrieve all data from the Accessory table
 app.get('/Accessory', (req, res) => {
     const sql = "SELECT * FROM Accessory";
     db.query(sql, (err, data) => {
@@ -107,6 +113,7 @@ app.post('/addAsset', (req, res) => {
     
 });
 
+// Function to delete an asset from the Asset table
 app.delete('/deleteAsset/:id', (req, res) => {
     const assetID = req.params.id;
     const sql = "DELETE FROM Asset WHERE Asset_ID = ?";
@@ -120,6 +127,7 @@ app.delete('/deleteAsset/:id', (req, res) => {
     });
 });
 
+// Function to add a new location to the Location table
 app.post('/addLocation', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
 

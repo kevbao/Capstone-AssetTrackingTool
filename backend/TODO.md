@@ -1,0 +1,2 @@
+- [ ] Wait for merge changes for dockerization
+- [ ] More research and discussion on what exactly is needed for radio->database update
