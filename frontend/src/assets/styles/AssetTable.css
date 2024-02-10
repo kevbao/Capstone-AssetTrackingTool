@@ -1,0 +1,24 @@
+/* AssetTable.css */
+.table-container {
+  padding: 50px;
+}
+
+.asset-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.asset-table th, .asset-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.asset-table th {
+  background-color: #f2f2f2;
+}
+
+.asset-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
