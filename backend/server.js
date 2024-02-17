@@ -76,7 +76,7 @@ app.get('/Accessory', (req, res) => {
 app.post('/addAsset', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
 
-    console.log(formData); // Verify if formData is received correctly
+    console.log("New Asset Added:", formData); // Verify if formData is received correctly
 
     const sql = `INSERT INTO Asset 
                 (Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, AssetTag, Category, Status, Purchase_Date, Cost, Deployed) 
@@ -110,6 +110,7 @@ app.post('/addAsset', (req, res) => {
 app.delete('/deleteAsset/:id', (req, res) => {
     const assetID = req.params.id;
     const sql = "DELETE FROM Asset WHERE Asset_ID = ?";
+    console.log("Asset Deleted:", assetID)
 
     db.query(sql, [assetID], (err, result) => {
         if (err) {
@@ -120,6 +121,55 @@ app.delete('/deleteAsset/:id', (req, res) => {
     });
 });
 
+// Update an asset based on its ID
+app.put('/updateAsset/:id', (req, res) => {
+    const assetID = req.params.id;
+    const updatedAssetData = req.body; // Data sent from the frontend to update the asset
+
+    const sql = `UPDATE Asset 
+                SET 
+                Asset_Name = ?,
+                Asset_Tag = ?,
+                VersionHistory = ?,
+                Current_Image = ?,
+                Model = ?,
+                Type = ?,
+                AssetTag = ?,
+                Category = ?,
+                Status = ?,
+                Purchase_Date = ?,
+                Cost = ?,
+                Deployed = ?
+                WHERE Asset_ID = ?`;
+
+    console.log("Asset Updated to:", updatedAssetData)
+
+    const values = [
+        updatedAssetData.Asset_Name,
+        updatedAssetData.Asset_Tag,
+        updatedAssetData.VersionHistory,
+        updatedAssetData.Current_Image,
+        updatedAssetData.Model,
+        updatedAssetData.Type,
+        updatedAssetData.AssetTag,
+        updatedAssetData.Category,
+        updatedAssetData.Status,
+        updatedAssetData.Purchase_Date,
+        updatedAssetData.Cost,
+        updatedAssetData.Deployed,
+        assetID // assetID to identify the asset to update
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Asset updated successfully' });
+    });
+});
+
+// Add a location
 app.post('/addLocation', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
 
@@ -145,7 +195,6 @@ app.post('/addLocation', (req, res) => {
     
 });
 // TODO: - Create functions for adding to locations table, members table, accessories table
-//       - Create functions for deleting from all of them
 
 // Listen on Port 8081
 app.listen(port, ()=> {
