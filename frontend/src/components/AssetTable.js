@@ -11,6 +11,9 @@ const AssetTable = () => {
   //Constants for searching
   const [selectedColumn, setSelectedColumn] = useState('Asset_Name');
   const [search, setSearch] = useState('');
+  //Constants for checking out
+  const [checkoutAssetID, setCheckoutAssetID] = useState(null);
+  const [checkoutMemberID, setCheckoutMemberID] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:8081/Asset')
@@ -87,6 +90,39 @@ const AssetTable = () => {
     );
   };
  //*************************************************** 
+
+ const handleCheckout = (assetID) => {
+    setCheckoutAssetID(assetID);
+  };
+
+  // Function to handle checkout
+  const handleCheckoutConfirm = () => {
+    // Send a request to the backend to update the Member_ID of the selected asset
+    fetch(`http://localhost:8081/checkoutAsset/${checkoutAssetID}/${checkoutMemberID}`, {
+      method: 'PUT',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        setCheckoutAssetID(null); // Reset checkout state
+        setCheckoutMemberID('');
+        fetchAssetData(); // Refresh asset data
+      })
+      .catch((err) => console.error(err));
+  };
+  //Function to handle checkin 
+  const handleCheckin = (assetID) => {
+    // Call the backend to update the Member_ID to null
+    fetch(`http://localhost:8081/checkinAsset/${assetID}`, {
+      method: 'PUT',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        fetchAssetData(); // Refresh the asset data after checkin
+      })
+      .catch((err) => console.error(err));
+  };
  
   return (
     <div className="table-container">
@@ -114,7 +150,7 @@ const AssetTable = () => {
           <option value="Deployed">Deployed</option>
         </select>
       </div>
-
+  
       {/* Asset Table */}
       <table className="asset-table">
         <thead>
@@ -132,6 +168,7 @@ const AssetTable = () => {
             <th>Purchase Date</th>
             <th>Cost</th>
             <th>Deployed</th>
+            <th>Checked out to</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -153,9 +190,15 @@ const AssetTable = () => {
                 <td>{d.Purchase_Date}</td>
                 <td>{d.Cost}</td>
                 <td>{d.Deployed}</td>
+                <td>{d.Member_ID ? d.Member_ID : ''}</td>
                 <td>
                   <button onClick={() => deleteAsset(d.Asset_ID)}>Delete</button>
                   <button onClick={() => updateAsset(d.Asset_ID)}>Update</button>
+                  {d.Member_ID ? (
+                  <button onClick={() => handleCheckin(d.Asset_ID)}>Checkin</button>
+                ) : (
+                  <button onClick={() => handleCheckout(d.Asset_ID)}>Checkout</button>
+                )}
                 </td>
               </tr>
             ))}
@@ -219,6 +262,23 @@ const AssetTable = () => {
 
               <button type="submit">Update Asset</button>
             </form>
+          </div>
+        </div>
+      )}
+      {/* Checkout Confirmation Modal */}
+      {checkoutAssetID && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={() => setCheckoutAssetID(null)}>
+              &times;
+            </span>
+            <p>Enter Member ID for checkout:</p>
+            <input
+              type="text"
+              value={checkoutMemberID}
+              onChange={(e) => setCheckoutMemberID(e.target.value)}
+            />
+            <button onClick={handleCheckoutConfirm}>Checkout</button>
           </div>
         </div>
       )}

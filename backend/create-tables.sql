@@ -17,6 +17,17 @@ CREATE TABLE Location (
     LocationType VARCHAR(60)
 );
 
+CREATE TABLE Member (
+    GD_id VARCHAR(50) PRIMARY KEY,
+    Name VARCHAR(50),
+    Permissions VARCHAR(50),
+    Email VARCHAR(50),
+    History VARCHAR(50),
+    Department VARCHAR(50),
+    Manager VARCHAR(50),
+    Check_in_time VARCHAR(40)
+);
+
 CREATE TABLE Asset ( 
     Asset_ID SERIAL PRIMARY KEY,
     Asset_Name VARCHAR(40),
@@ -30,16 +41,7 @@ CREATE TABLE Asset (
     Status VARCHAR(40),
     Purchase_Date VARCHAR(40),
     Cost VARCHAR(40),
-    Deployed VARCHAR(40)
-);
-
-CREATE TABLE Member (
-    GD_id SERIAL PRIMARY KEY,
-    Name VARCHAR(50),
-    Permissions VARCHAR(50),
-    Email VARCHAR(50),
-    History VARCHAR(50),
-    Department VARCHAR(50),
-    Manager VARCHAR(50),
-    Check_in_time VARCHAR(40)
+    Deployed VARCHAR(40),
+    Member_ID VARCHAR(50) NULL,
+    CONSTRAINT fk_Asset_Member FOREIGN KEY (Member_ID) REFERENCES Member(GD_id)
 );

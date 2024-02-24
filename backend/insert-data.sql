@@ -25,6 +25,6 @@ INSERT INTO Asset(Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, T
 VALUES 
 ('NewAssetName', 'NewAssetTag', 'NewVersionHistory', 'NewCurrentImage', 'NewModel', 'NewType', 'NewAssetTag', 'NewCategory', 'NewStatus', 'NewPurchaseDate', 'NewCost', 'NewDeployed');
 
-INSERT INTO Member(Name, Permissions, Email, History, Department, Manager, Check_in_time) 
+INSERT INTO Member(GD_id, Name, Permissions, Email, History, Department, Manager, Check_in_time) 
 VALUES 
-('NewMemberName', 'NewPermissions', 'NewEmail', 'NewHistory', 'NewDepartment', 'NewManager', 'NewCheckInTime');
+('NewGDID', 'NewMemberName', 'NewPermissions', 'NewEmail', 'NewHistory', 'NewDepartment', 'NewManager', 'NewCheckInTime');

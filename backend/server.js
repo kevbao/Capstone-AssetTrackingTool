@@ -27,9 +27,28 @@ const db = mysql.createConnection({
     database: 'asset_tracking' // change this to the name of your own schema which should be asset_tracking
 })
 
-app.get('/', (re, res) => {
-    return res.json("This is our Database Server");
-})
+// LANDING PAGE FOR BACKEND SERVER (change all app.get to stylize server to more than just json)
+app.get('/', (req, res) => {
+    const welcomeMessage = `
+        <html>
+            <head>
+                <title>Welcome to Asset Tracking Server</title>
+            </head>
+            <body>
+                <h1>Welcome to Asset Tracking Server</h1>
+                <p>This is the backend server for the Asset Tracking application. You can use the following endpoints:</p>
+                <ul>
+                    <li><a href="/Asset">View Assets</a></li>
+                    <li><a href="/Member">View Members</a></li>
+                    <li><a href="/Location">View Locations</a></li>
+                    <li><a href="/Accessory">View Accessories</a></li>
+                </ul>
+            </body>
+        </html>
+    `;
+    res.send(welcomeMessage);
+});
+
 
 // ******************************************************************************************
 // RETRIEVE ALL DATA FROM TABLES 
@@ -37,10 +56,62 @@ app.get('/', (re, res) => {
 app.get('/Asset', (req, res) => {
     const sql = "SELECT * FROM Asset";
     db.query(sql, (err, data) => {
-        if(err) return res.json(err);
-        return res.json(data);
-    })
-})
+        if(err) {
+            console.error('Database query error:', err);
+            return res.status(500).send('<p>Error retrieving data from the database</p>');
+        }
+
+        // Convert the data to an HTML table
+        const tableRows = data.map(asset => {
+            return `<tr>
+                        <td>${asset.Asset_ID}</td>
+                        <td>${asset.Asset_Name}</td>
+                        <td>${asset.Asset_Tag}</td>
+                        <!-- Add more columns as needed -->
+                    </tr>`;
+        });
+
+        // Create the HTML table
+        const assetTable = `
+            <html>
+                <head>
+                    <title>Asset Table</title>
+                    <style>
+                        /* Add any styling as needed */
+                        table {
+                            border-collapse: collapse;
+                            width: 100%;
+                        }
+                        th, td {
+                            border: 1px solid black;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>Asset Table</h1>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset ID</th>
+                                <th>Asset Name</th>
+                                <th>Asset Tag</th>
+                                <!-- Add more headers as needed -->
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${tableRows.join('')}
+                        </tbody>
+                    </table>
+                </body>
+            </html>
+        `;
+
+        return res.send(assetTable);
+    });
+});
+
 
 app.get('/Member', (req, res) => {
     const sql = "SELECT * FROM Member";
@@ -194,6 +265,88 @@ app.post('/addLocation', (req, res) => {
     });
     
 });
+
+// Add a new Member
+app.post('/addMember', (req, res) => {
+    const formData = req.body; // Retrieve the entire form data object
+
+    console.log('New User Added:', formData); // Verify if formData is received correctly
+
+    const sql = `INSERT INTO Member 
+                (GD_id, Name, Permissions, Email, History, Department, Manager, Check_in_time) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+
+    const values = [
+        formData.GD_id,
+        formData.Name,
+        formData.Permissions,
+        formData.Email,
+        formData.History,
+        formData.Department,
+        formData.Manager,
+        formData.Check_in_time
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            //console.error('Database query error:', err); // Log the specific database query error
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Member added successfully' });
+    });
+    
+});
+
+//Checkout an asset to a specific member
+app.put('/checkoutAsset/:assetID/:memberID', (req, res) => {
+    const assetID = req.params.assetID;
+    const memberID = req.params.memberID;
+  
+    // Check if the memberID exists in the Members table
+    const checkMemberExistenceQuery = 'SELECT * FROM Member WHERE GD_id = ?';
+  
+    db.query(checkMemberExistenceQuery, [memberID], (checkErr, checkResult) => {
+      if (checkErr) {
+        console.error('Database query error:', checkErr);
+        return res.status(500).json({ error: 'Database query error' });
+      }
+  
+      if (checkResult.length === 0) {
+        // MemberID does not exist in the Members table
+        console.log('MemberID does not exist, Asset was not checked out')
+        return res.status(400).json({ error: 'MemberID does not exist' });
+      }
+  
+      // If memberID exists, proceed with updating the Asset table
+      const updateAssetQuery = 'UPDATE Asset SET Member_ID = ? WHERE Asset_ID = ?';
+  
+      db.query(updateAssetQuery, [memberID, assetID], (updateErr, updateResult) => {
+        if (updateErr) {
+          console.error('Database query error:', updateErr);
+          return res.status(500).json({ error: 'Database query error' });
+        }
+        console.log('Asset Checked out to:', memberID)
+        return res.status(200).json({ message: 'Asset checked out successfully' });
+      });
+    });
+});
+
+// Checkin a checked out Asset
+app.put('/checkinAsset/:assetID', (req, res) => {
+    const assetID = req.params.assetID;
+  
+    const sql = 'UPDATE Asset SET Member_ID = NULL WHERE Asset_ID = ?';
+  
+    db.query(sql, [assetID], (err, result) => {
+      if (err) {
+        console.error('Database query error:', err);
+        return res.status(500).json({ error: 'Database query error' });
+      }
+      console.log('Asset', assetID, 'succesfully checked in.')
+      return res.status(200).json({ message: 'Asset checked in successfully' });
+    });
+});
+
 // TODO: - Create functions for adding to locations table, members table, accessories table
 
 // Listen on Port 8081

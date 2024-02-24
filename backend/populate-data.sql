@@ -23,10 +23,10 @@ VALUES
 ('Radio 5', 'Tag 5', 'Version 5', 'Image 5', 'Model 5', 'Type 5', 'AssetTag 5', 'Category 5', 'Available', '2023-05-05', '500', 'No');
 
 
-INSERT INTO Member(Name, Permissions, Email, History, Department, Manager, Check_in_time) 
+INSERT INTO Member(GD_id, Name, Permissions, Email, History, Department, Manager, Check_in_time) 
 VALUES 
-('John Doe', 'Admin', 'johndoe@example.com', 'History 1', 'Testing', 'Jane Smith', '2023-11-03 08:00:00'),
-('Jane Smith', 'User', 'janesmith@example.com', 'History 2', 'Assembly', 'John Doe', '2023-11-03 08:30:00'),
-('Alice Johnson', 'User', 'alicejohnson@example.com', 'History 3', 'Storage', 'Bob Williams', '2023-11-03 09:00:00'),
-('Bob Williams', 'Admin', 'bobwilliams@example.com', 'History 4', 'Office', 'Alice Johnson', '2023-11-03 09:30:00'),
-('Charlie Brown', 'User', 'charliebrown@example.com', 'History 5', 'Shipping', 'John Doe', '2023-11-03 10:00:00');
+('1234', 'John Doe', 'Admin', 'johndoe@example.com', 'History 1', 'Testing', 'Jane Smith', '2023-11-03 08:00:00'),
+('2345', 'Jane Smith', 'User', 'janesmith@example.com', 'History 2', 'Assembly', 'John Doe', '2023-11-03 08:30:00'),
+('3456', 'Alice Johnson', 'User', 'alicejohnson@example.com', 'History 3', 'Storage', 'Bob Williams', '2023-11-03 09:00:00'),
+('4567', 'Bob Williams', 'Admin', 'bobwilliams@example.com', 'History 4', 'Office', 'Alice Johnson', '2023-11-03 09:30:00'),
+('5678', 'Charlie Brown', 'User', 'charliebrown@example.com', 'History 5', 'Shipping', 'John Doe', '2023-11-03 10:00:00');

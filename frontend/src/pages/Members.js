@@ -1,5 +1,6 @@
 // Members.js
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import '../assets/styles/Members.css';
 
 const MemberTable = () => {
@@ -30,6 +31,7 @@ const MemberTable = () => {
 
   return (
     <div className="member-table-container">
+      <div><Link to="/addMember" className="addmember-btn">Add New User</Link></div>
       <h1>Members</h1>
       {/* Search input */}
       <input
