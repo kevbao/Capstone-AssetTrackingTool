@@ -10,7 +10,7 @@ INSERT INTO Asset(Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, T
 VALUES 
 ('NewAssetName', 'NewAssetTag', 'NewVersionHistory', 'NewCurrentImage', 'NewModel', 'NewType', 'NewCategory', 'NewStatus', 'NewPurchaseDate', 'NewCost', 'NewDeployed');
 
-INSERT INTO Member(Name, Permissions, Email, History, Department, Manager) 
+INSERT INTO Member(Name, Permissions, Email, History, Department, Manager,) 
 VALUES 
 ('NewMemberName', 'NewPermissions', 'NewEmail', 'NewHistory', 'NewDepartment', 'NewManager');
 INSERT INTO Accessory(Name, Description, Category, Model, Total, numCheckedOut, cost) 
@@ -23,7 +23,7 @@ VALUES
 
 INSERT INTO Asset(Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, Category, Status, Purchase_Date, Cost, Deployed) 
 VALUES 
-('NewAssetName', 'NewAssetTag', 'NewVersionHistory', 'NewCurrentImage', 'NewModel', 'NewType', 'NewCategory', 'NewStatus', 'NewPurchaseDate', 'NewCost', 'NewDeployed');
+('NewAssetName', 'NewAssetTag', 'NewVersionHistory', 'NewCurrentImage', 'NewModel', 'NewType',  'NewCategory', 'NewStatus', 'NewPurchaseDate', 'NewCost', 'NewDeployed');
 
 INSERT INTO Member(GD_id, Name, Permissions, Email, History, Department, Manager) 
 VALUES 
