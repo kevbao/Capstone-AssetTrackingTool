@@ -1,58 +1,75 @@
 import { Box, Button, Typography, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
-import { tokens } from "../../theme";
 import Header from "../../components/Header";
+import { useState, useEffect } from 'react';
 
 const Asset = () => {
   const theme = useTheme();
-  const colors = tokens(theme.palette.mode);
+
+  const [assetData, setAssetData] = useState([]);
+
+  useEffect(() => {
+    fetchAssetData();
+  }, []);
+
+  const fetchAssetData = () => {
+    fetch('http://localhost:8081/Asset')
+      .then((res) => res.json())
+      .then((data) => {
+        // add unique id property to each row
+        const newData = data.map((row) => ({
+          ...row,
+          id: row.Asset_ID // Asset_ID is unique
+        }));
+        setAssetData(newData);
+      })
+      .catch((err) => console.log(err));
+  };
+  
+  const handleCheckIn = (assetID) => {
+    fetch(`http://localhost:8081/checkinAsset/${assetID}`, {
+      method: 'PUT',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        fetchAssetData();
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleCheckOut = (assetID) => {
+    // Handle checkout functionality similar to checkin
+    
+  };
+
+  const handleDelete = (assetID) => {
+    console.log(`Delete button clicked for asset ID: ${assetID}`);
+    fetch(`http://localhost:8081/deleteAsset/${assetID}`, {
+      method: 'DELETE',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        fetchAssetData();
+      })
+      .catch((err) => console.error(err));
+  };
+
   const columns = [
-    { field: "id", headerName: "ID" },
-    { field: "assetName", headerName: "Asset Name", flex: 1 },
-    { field: "assetTag", headerName: "Asset Tag", flex: 1 },
-    { field: "versionHistory", headerName: "Version History", flex: 1 },
-    { field: "currentImage", headerName: "Current Image", flex: 1 },
-    { field: "model", headerName: "Model", flex: 1 },
-    { field: "type", headerName: "Type", flex: 1 },
-    { field: "category", headerName: "Category", flex: 1 },
-    { field: "status", headerName: "Status", flex: 1 },
-    { field: "purchaseDate", headerName: "Purchase Date", flex: 1 },
-    { field: "cost", headerName: "Cost", flex: 1 },
-    { field: "deployed", headerName: "Deployed", flex: 1 },
+    { field: "Asset_ID", headerName: "Asset ID" },
+    { field: "Asset_Name", headerName: "Asset Name", flex: 1 },
+    { field: "Asset_Tag", headerName: "Asset Tag", flex: 1 },
+    { field: "VersionHistory", headerName: "Version History", flex: 1 },
+    { field: "Current_Image", headerName: "Current Image", flex: 1 },
+    { field: "Model", headerName: "Model", flex: 1 },
+    { field: "Type", headerName: "Type", flex: 1 },
+    { field: "Category", headerName: "Category", flex: 1 },
+    { field: "Status", headerName: "Status", flex: 1 },
+    { field: "Purchase_Date", headerName: "Purchase Date", flex: 1 },
+    { field: "Cost", headerName: "Cost", flex: 1 },
+    { field: "Deployed", headerName: "Deployed", flex: 1 },
   ];
-
-  const mockDataAsset = [
-    {
-      id: 1,
-      assetName: "Radio 1",
-      assetTag: "Tag 1",
-      versionHistory: "Version 1",
-      currentImage: "Image 1",
-      model: "Model 1",
-      type: "Type 1",
-      category: "Category 1",
-      status: "Available",
-      purchaseDate: "2023-01-01",
-      cost: "100",
-      deployed: "No",
-    },
-    // Other mock data items...
-  ];
-
-  const handleCheckIn = () => {
-    // Implement check-in functionality
-    console.log("Check-In clicked");
-  };
-
-  const handleCheckOut = () => {
-    // Implement check-out functionality
-    console.log("Check-Out clicked");
-  };
-
-  const handleDelete = () => {
-    // Implement delete functionality
-    console.log("Delete clicked");
-  };
 
   return (
     <Box m="20px">
@@ -61,46 +78,25 @@ const Asset = () => {
         m="40px 0 0 0"
         height="75vh"
         sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: colors.blueAccent[700],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: colors.primary[400],
-          },
-          "& .MuiDataGrid-footerContainer": {
-            borderTop: "none",
-            backgroundColor: colors.blueAccent[700],
-          },
-          "& .MuiCheckbox-root": {
-            color: `${colors.greenAccent[200]} !important`,
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${colors.grey[100]} !important`,
-          },
+          // Styles...
         }}
       >
         <DataGrid
           checkboxSelection
-          rows={mockDataAsset}
+          rows={assetData}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
+          pageSize={10}
         />
       </Box>
       <Box mt={2} display="flex" justifyContent="space-between">
-        <Button variant="contained" color="primary" onClick={handleCheckIn}>
+        <Button variant="contained" color="primary" onClick={() => handleCheckIn(assetData.id)}>
           Check-In
         </Button>
-        <Button variant="contained" color="primary" onClick={handleCheckOut}>
+        <Button variant="contained" color="primary" onClick={() => handleCheckOut(assetData.id)}>
           Check-Out
         </Button>
-        <Button variant="contained" color="error" onClick={handleDelete}>
+        <Button variant="contained" color="error" onClick={() => handleDelete(assetData.id)}>
           Delete
         </Button>
       </Box>
