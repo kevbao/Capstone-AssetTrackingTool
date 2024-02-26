@@ -56,264 +56,35 @@ app.get('/', (req, res) => {
 app.get('/Asset', (req, res) => {
     const sql = "SELECT * FROM Asset";
     db.query(sql, (err, data) => {
-        if(err) {
-            console.error('Database query error:', err);
-            return res.status(500).send('<p>Error retrieving data from the database</p>');
-        }
-
-        // Convert the data to an HTML table
-        const tableRows = data.map(asset => {
-            return `<tr>
-                        <td>${asset.Asset_ID}</td>
-                        <td>${asset.Asset_Name}</td>
-                        <td>${asset.Asset_Tag}</td>
-                        <td>${asset.VersionHistory}</td>
-                        <td>${asset.Current_Image}</td>
-                        <td>${asset.Model}</td>
-                        <td>${asset.Type}</td>
-                        <td>${asset.Category}</td>
-                        <td>${asset.Status}</td>
-                        <td>${asset.Purchase_Date}</td>
-                        <td>${asset.Cost}</td>
-                        <td>${asset.Deployed}</td>
-                        <td>${asset.Member_ID}</td>
-                        <!-- Add more columns as needed -->
-                    </tr>`;
-        });
-
-        // Create the HTML table
-        const assetTable = `
-            <html>
-                <head>
-                    <title>Asset Table</title>
-                    <style>
-                        /* Add any styling as needed */
-                        table {
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        th, td {
-                            border: 1px solid black;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Asset Table</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Asset ID</th>
-                                <th>Asset Name</th>
-                                <th>Asset Tag</th>
-                                <th>Version History</th>
-                                <th>Current Image</th>
-                                <th>Model</th>
-                                <th>Type</th>
-                                <th>Asset Tag</th>
-                                <th>Category</th>
-                                <th>Status</th>
-                                <th>Purchase Date</th>
-                                <th>Cost</th>
-                                <th>Deployed</th>
-                                <th>Member_ID</th>
-                                <!-- Add more headers as needed -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows.join('')}
-                        </tbody>
-                    </table>
-                </body>
-            </html>
-        `;
-
-        return res.send(assetTable);
-    });
-});
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
 
 
 app.get('/Member', (req, res) => {
     const sql = "SELECT * FROM Member";
     db.query(sql, (err, data) => {
-        if(err) {
-            console.error('Database query error:', err);
-            return res.status(500).send('<p>Error retrieving data from the database</p>');
-        }
-
-        // Convert the data to an HTML table
-        const tableRows = data.map(member => {
-            return `<tr>
-                        <td>${member.Member_ID}</td>
-                        <td>${member.First_Name}</td>
-                        <td>${member.Last_Name}</td>
-                        <td>${member.Email}</td>
-                        <td>${member.Phone}</td>
-                        <!-- Add more columns as needed -->
-                    </tr>`;
-        });
-
-        // Create the HTML table
-        const memberTable = `
-            <html>
-                <head>
-                    <title>Member Table</title>
-                    <style>
-                        /* Add any styling as needed */
-                        table {
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        th, td {
-                            border: 1px solid black;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Member Table</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Member ID</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
-                                <!-- Add more headers as needed -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows.join('')}
-                        </tbody>
-                    </table>
-                </body>
-            </html>
-        `;
-
-        return res.send(memberTable);
-    });
-});
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
 
 app.get('/Location', (req, res) => {
     const sql = "SELECT * FROM Location";
     db.query(sql, (err, data) => {
-        if(err) {
-            console.error('Database query error:', err);
-            return res.status(500).send('<p>Error retrieving data from the database</p>');
-        }
-
-        // Convert the data to an HTML table
-        const tableRows = data.map(location => {
-            return `<tr>
-                        <td>${location.Location_ID}</td>
-                        <td>${location.Location_Name}</td>
-                        <td>${location.Location_Description}</td>
-                        <!-- Add more columns as needed -->
-                    </tr>`;
-        });
-
-        // Create the HTML table
-        const locationTable = `
-            <html>
-                <head>
-                    <title>Location Table</title>
-                    <style>
-                        /* Add any styling as needed */
-                        table {
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        th, td {
-                            border: 1px solid black;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Location Table</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Location ID</th>
-                                <th>Location Name</th>
-                                <th>Location Description</th>
-                                <!-- Add more headers as needed -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows.join('')}
-                        </tbody>
-                    </table>
-                </body>
-            </html>
-        `;
-
-        return res.send(locationTable);
-    });
-});
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
 
 app.get('/Accessory', (req, res) => {
     const sql = "SELECT * FROM Accessory";
     db.query(sql, (err, data) => {
-        if(err) {
-            console.error('Database query error:', err);
-            return res.status(500).send('<p>Error retrieving data from the database</p>');
-        }
-
-        // Convert the data to an HTML table
-        const tableRows = data.map(accessory => {
-            return `<tr>
-                        <td>${accessory.Accessory_ID}</td>
-                        <td>${accessory.Accessory_Name}</td>
-                        <td>${accessory.Accessory_Description}</td>
-                        <!-- Add more columns as needed -->
-                    </tr>`;
-        });
-
-        // Create the HTML table
-        const accessoryTable = `
-            <html>
-                <head>
-                    <title>Accessory Table</title>
-                    <style>
-                        /* Add any styling as needed */
-                        table {
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        th, td {
-                            border: 1px solid black;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Accessory Table</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Accessory ID</th>
-                                <th>Accessory Name</th>
-                                <th>Accessory Description</th>
-                                <!-- Add more headers as needed -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows.join('')}
-                        </tbody>
-                    </table>
-                </body>
-            </html>
-        `;
-
-        return res.send(accessoryTable);
-    });
-});
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
 // Add more tables here when created.
 
 // ******************************************************************************************
