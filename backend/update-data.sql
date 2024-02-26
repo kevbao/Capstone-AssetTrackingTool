@@ -16,7 +16,6 @@ UPDATE Asset SET
     Current_Image = 'UpdatedCurrentImage',
     Model = 'UpdatedModel',
     Type = 'UpdatedType',
-    AssetTag = 'UpdatedAssetTag',
     Category = 'UpdatedCategory',
     Status = 'UpdatedStatus',
     Purchase_Date = 'UpdatedPurchaseDate',
@@ -39,6 +38,5 @@ UPDATE Member SET
     Email = 'UpdatedEmail',
     History = 'UpdatedHistory',
     Department = 'UpdatedDepartment',
-    Manager = 'UpdatedManager',
-    Check_in_time = 'UpdatedCheckInTime'
+    Manager = 'UpdatedManager'
 WHERE GD_id = 1;

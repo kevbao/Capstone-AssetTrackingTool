@@ -24,8 +24,7 @@ CREATE TABLE Member (
     Email VARCHAR(50),
     History VARCHAR(50),
     Department VARCHAR(50),
-    Manager VARCHAR(50),
-    Check_in_time VARCHAR(40)
+    Manager VARCHAR(50)
 );
 
 CREATE TABLE Asset ( 
@@ -36,7 +35,6 @@ CREATE TABLE Asset (
     Current_Image VARCHAR(40),
     Model VARCHAR(40),
     Type VARCHAR(40),
-    AssetTag VARCHAR(40),
     Category VARCHAR(40),
     Status VARCHAR(40),
     Purchase_Date VARCHAR(40),
