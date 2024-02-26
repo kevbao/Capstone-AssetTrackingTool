@@ -56,61 +56,10 @@ app.get('/', (req, res) => {
 app.get('/Asset', (req, res) => {
     const sql = "SELECT * FROM Asset";
     db.query(sql, (err, data) => {
-        if(err) {
-            console.error('Database query error:', err);
-            return res.status(500).send('<p>Error retrieving data from the database</p>');
-        }
-
-        // Convert the data to an HTML table
-        const tableRows = data.map(asset => {
-            return `<tr>
-                        <td>${asset.Asset_ID}</td>
-                        <td>${asset.Asset_Name}</td>
-                        <td>${asset.Asset_Tag}</td>
-                        <!-- Add more columns as needed -->
-                    </tr>`;
-        });
-
-        // Create the HTML table
-        const assetTable = `
-            <html>
-                <head>
-                    <title>Asset Table</title>
-                    <style>
-                        /* Add any styling as needed */
-                        table {
-                            border-collapse: collapse;
-                            width: 100%;
-                        }
-                        th, td {
-                            border: 1px solid black;
-                            padding: 8px;
-                            text-align: left;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>Asset Table</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Asset ID</th>
-                                <th>Asset Name</th>
-                                <th>Asset Tag</th>
-                                <!-- Add more headers as needed -->
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${tableRows.join('')}
-                        </tbody>
-                    </table>
-                </body>
-            </html>
-        `;
-
-        return res.send(assetTable);
-    });
-});
+        if(err) return res.json(err);
+        return res.json(data);
+    })
+})
 
 
 app.get('/Member', (req, res) => {
