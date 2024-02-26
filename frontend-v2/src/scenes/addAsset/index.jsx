@@ -5,12 +5,40 @@ import * as yup from "yup";
 import Header from "../../components/Header";
 
 const Form = () => {
-  const handleFormSubmit = (values, { resetForm }) => {
-    console.log(values); // Log the form values for now
-    
-    // Reset the form data after successful submission
-    resetForm();
+  const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
+    // Set the form data
+    const formData = {
+      Asset_Name: values.assetName,
+      Asset_Tag: values.assetTag,
+      VersionHistory: values.versionHistory,
+      Current_Image: values.currentImage,
+      Model: values.model,
+      Type: values.type,
+      Category: values.category,
+      Status: values.status,
+      Purchase_Date: values.purchaseDate,
+      Cost: values.cost,
+      Deployed: values.deployed
+    };
+  
+    fetch('http://localhost:8081/addAsset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message);
+      resetForm(); // Reset form after successful submission
+    })
+    .catch((err) => console.error(err))
+    .finally(() => {
+      setSubmitting(false); // Reset form submission state
+    });
   };
+  
 
   return (
     <Box m="20px">
@@ -28,7 +56,7 @@ const Form = () => {
           handleBlur,
           handleChange,
           handleSubmit,
-          resetForm, // Access the resetForm function from Formik
+          isSubmitting
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
@@ -188,8 +216,13 @@ const Form = () => {
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Add Asset
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                disabled={isSubmitting} // Disable button during submission
+              >
+                {isSubmitting ? 'Adding...' : 'Add Asset'}
               </Button>
             </Box>
           </form>
@@ -228,3 +261,4 @@ const initialValues = {
 };
 
 export default Form;
+
