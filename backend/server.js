@@ -99,7 +99,7 @@ app.post('/addAsset', (req, res) => {
     console.log("New Asset Added:", formData); // Verify if formData is received correctly
 
     const sql = `INSERT INTO Asset 
-                (Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, AssetTag, Category, Status, Purchase_Date, Cost, Deployed) 
+                (Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, Category, Status, Purchase_Date, Cost, Deployed) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
@@ -109,7 +109,6 @@ app.post('/addAsset', (req, res) => {
         formData.Current_Image,
         formData.Model,
         formData.Type,
-        formData.AssetTag,
         formData.Category,
         formData.Status,
         formData.Purchase_Date,
@@ -154,7 +153,6 @@ app.put('/updateAsset/:id', (req, res) => {
                 Current_Image = ?,
                 Model = ?,
                 Type = ?,
-                AssetTag = ?,
                 Category = ?,
                 Status = ?,
                 Purchase_Date = ?,
@@ -171,7 +169,6 @@ app.put('/updateAsset/:id', (req, res) => {
         updatedAssetData.Current_Image,
         updatedAssetData.Model,
         updatedAssetData.Type,
-        updatedAssetData.AssetTag,
         updatedAssetData.Category,
         updatedAssetData.Status,
         updatedAssetData.Purchase_Date,
@@ -222,7 +219,7 @@ app.post('/addMember', (req, res) => {
     console.log('New User Added:', formData); // Verify if formData is received correctly
 
     const sql = `INSERT INTO Member 
-                (GD_id, Name, Permissions, Email, History, Department, Manager, Check_in_time) 
+                (GD_id, Name, Permissions, Email, History, Department, Manager) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
@@ -232,8 +229,7 @@ app.post('/addMember', (req, res) => {
         formData.Email,
         formData.History,
         formData.Department,
-        formData.Manager,
-        formData.Check_in_time
+        formData.Manager
     ];
 
     db.query(sql, values, (err, result) => {

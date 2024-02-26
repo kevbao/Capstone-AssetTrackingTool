@@ -51,7 +51,6 @@ const MemberTable = () => {
             <th>History</th>
             <th>Department</th>
             <th>Manager</th>
-            <th>Check_in_time</th>
           </tr>
         </thead>
         <tbody>
@@ -64,7 +63,6 @@ const MemberTable = () => {
               <td>{member.History}</td>
               <td>{member.Department}</td>
               <td>{member.Manager}</td>
-              <td>{member.Check_in_time}</td>
             </tr>
           ))}
         </tbody>

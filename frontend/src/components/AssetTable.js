@@ -142,7 +142,6 @@ const AssetTable = () => {
           <option value="Current_Image">Current Image</option>
           <option value="Model">Model</option>
           <option value="Type">Type</option>
-          <option value="AssetTag">AssetTag</option>
           <option value="Category">Category</option>
           <option value="Status">Status</option>
           <option value="Purchase_Date">Purchase Date</option>
@@ -162,7 +161,6 @@ const AssetTable = () => {
             <th>Current Image</th>
             <th>Model</th>
             <th>Type</th>
-            <th>AssetTag</th>
             <th>Category</th>
             <th>Status</th>
             <th>Purchase Date</th>
@@ -184,7 +182,6 @@ const AssetTable = () => {
                 <td>{d.Current_Image}</td>
                 <td>{d.Model}</td>
                 <td>{d.Type}</td>
-                <td>{d.AssetTag}</td>
                 <td>{d.Category}</td>
                 <td>{d.Status}</td>
                 <td>{d.Purchase_Date}</td>
@@ -241,9 +238,6 @@ const AssetTable = () => {
 
               <label>Type: </label>
               <input type="text" name="Type" defaultValue={selectedAsset?.Type} required />
-
-              <label>AssetTag: </label>
-              <input type="text" name="AssetTag" defaultValue={selectedAsset?.AssetTag} required />
 
               <label>Category: </label>
               <input type="text" name="Category" defaultValue={selectedAsset?.Category} required />

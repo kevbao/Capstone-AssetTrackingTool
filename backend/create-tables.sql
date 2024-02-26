@@ -24,8 +24,7 @@ CREATE TABLE Member (
     Email VARCHAR(50),
     History VARCHAR(50),
     Department VARCHAR(50),
-    Manager VARCHAR(50),
-    Check_in_time VARCHAR(40)
+    Manager VARCHAR(50)
 );
 
 CREATE TABLE Asset ( 
@@ -36,12 +35,22 @@ CREATE TABLE Asset (
     Current_Image VARCHAR(40),
     Model VARCHAR(40),
     Type VARCHAR(40),
-    AssetTag VARCHAR(40),
     Category VARCHAR(40),
     Status VARCHAR(40),
     Purchase_Date VARCHAR(40),
     Cost VARCHAR(40),
     Deployed VARCHAR(40),
     Member_ID VARCHAR(50) NULL,
-    CONSTRAINT fk_Asset_Member FOREIGN KEY (Member_ID) REFERENCES Member(GD_id)
+    FOREIGN KEY (Member_ID) REFERENCES Member(GD_id)
+);
+
+CREATE TABLE History (
+    Action_Number INT PRIMARY KEY,
+    Asset_ID SERIAL,
+    Member_ID VARCHAR(50),
+    Action_Type VARCHAR(100),
+    Action_Description VARCHAR(255),
+    DateTime TIMESTAMP UNIQUE,
+    CONSTRAINT fk_History_Asset FOREIGN KEY (Asset_ID) REFERENCES Asset(Asset_ID),
+    CONSTRAINT fk_History_Member FOREIGN KEY (Member_ID) REFERENCES Member(GD_id)
 );
