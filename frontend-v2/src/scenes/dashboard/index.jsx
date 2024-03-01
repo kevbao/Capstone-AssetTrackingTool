@@ -155,7 +155,7 @@ useEffect(() => {
               </Typography>
             </Box>
             {/* Rendering fetched activities */}
-            {activities.map((activity) => (
+            {/* {activities.map((activity) => (
               <Box
                 key={activity.Action_Number}
                 display="flex"
@@ -171,7 +171,7 @@ useEffect(() => {
                 </Box>
                 <Box color={colors.grey[100]}>{activity.DateTime}</Box>
               </Box>
-            ))}
+            ))} */}
           </Box>
         <Box
           gridColumn="span 4"

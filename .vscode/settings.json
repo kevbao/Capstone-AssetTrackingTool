@@ -12,7 +12,7 @@
             "name": "AssetTracking",
             "database": "asset_tracking",
             "username": "root",
-            "password": "5427"
+            "password": ""
         }
     ]
 }

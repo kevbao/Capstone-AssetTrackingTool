@@ -39,9 +39,16 @@ const Asset = () => {
       .catch((err) => console.error(err));
   };
 
-  const handleCheckOut = (assetID) => {
-    // Handle checkout functionality similar to checkin
-    
+  const handleCheckOut = (assetID, memberID) => {
+    fetch(`http://localhost:8081/checkoutAsset/${assetID}/${memberID}`, {
+      method: 'PUT',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        fetchAssetData();
+      })
+      .catch((err) => console.error(err));
   };
 
   const handleDelete = (assetID) => {
@@ -73,15 +80,35 @@ const Asset = () => {
     {
       field: "action",
       headerName: "Action",
-      width: 100,
+      width: 250,
       renderCell: (params) => (
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => handleDelete(params.row.Asset_ID)}
-        >
-          Delete
-        </Button>
+        <Box display="flex" justifyContent="space-between">
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleCheckIn(params.row.Asset_ID)}
+            style={{ padding: 2 }} // Add margin-right for space
+          >
+            In
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handleCheckOut(params.row.Asset_ID)}
+            style={{ margin: '0 8px' }} // Add margin for space
+          >
+            Out
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDelete(params.row.Asset_ID)}
+            style={{ padding: 2 }} // Add margin-left for space
+          >
+            Delete
+          </Button>
+        </Box>
+
       ),
     },
   ];
@@ -111,7 +138,7 @@ const Asset = () => {
             backgroundColor: colors.blueAccent[700],
           },
           "& .MuiCheckbox-root": {
-            color: `${colors.greenAccent[200]} !important`,
+            display: "none",
           },
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
             color: `${colors.grey[100]} !important`,
@@ -119,20 +146,11 @@ const Asset = () => {
         }}
       >
         <DataGrid
-          checkboxSelection
           rows={assetData}
           columns={columns}
           components={{ Toolbar: GridToolbar }}
           pageSize={10}
         />
-      </Box>
-      <Box mt={2} display="flex" justifyContent="space-between">
-        <Button variant="contained" color="primary" onClick={() => handleCheckIn(assetData.id)}>
-          Check-In
-        </Button>
-        <Button variant="contained" color="primary" onClick={() => handleCheckOut(assetData.id)}>
-          Check-Out
-        </Button>
       </Box>
     </Box>
   );
