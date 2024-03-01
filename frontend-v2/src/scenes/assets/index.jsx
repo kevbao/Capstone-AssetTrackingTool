@@ -70,6 +70,20 @@ const Asset = () => {
     { field: "Purchase_Date", headerName: "Purchase Date", flex: 1 },
     { field: "Cost", headerName: "Cost", flex: 1 },
     { field: "Deployed", headerName: "Deployed", flex: 1 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 100,
+      renderCell: (params) => (
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => handleDelete(params.row.Asset_ID)}
+        >
+          Delete
+        </Button>
+      ),
+    },
   ];
 
   return (
@@ -118,9 +132,6 @@ const Asset = () => {
         </Button>
         <Button variant="contained" color="primary" onClick={() => handleCheckOut(assetData.id)}>
           Check-Out
-        </Button>
-        <Button variant="contained" color="error" onClick={() => handleDelete(assetData.id)}>
-          Delete
         </Button>
       </Box>
     </Box>
