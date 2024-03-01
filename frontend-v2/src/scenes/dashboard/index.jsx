@@ -9,6 +9,9 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import StatBox from "../../components/StatBox";
 import QrCode2OutlinedIcon from "@mui/icons-material/QrCode2Outlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
+import React, { useEffect, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom'
+
 
 // import LineChart from "../../components/LineChart";
 // import GeographyChart from "../../components/GeographyChart";
@@ -19,6 +22,16 @@ import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
+  const[activities, setActivities] = useState([]);
+
+useEffect(() => {
+  // Fetch data from backend when component mounts
+  fetch('http://localhost:8081/History')
+    .then((res) => res.json())
+    .then((data) => setActivities(data))
+    .catch((err) => console.error(err));
+}, []); // Empty dependency array ensures this effect runs only once on component mount
+
 
   return (
     <Box m="20px">
@@ -123,56 +136,43 @@ const Dashboard = () => {
           />
         </Box>
         {/*Recent Activity */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-        >
           <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
-            p="15px"
+            gridColumn="span 4"
+            gridRow="span 2"
+            backgroundColor={colors.primary[400]}
+            overflow="auto"
           >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Recent Activity
-            </Typography>
-          </Box>
-          {mockTransactions.map((transaction, i) => (
             <Box
-              key={`${transaction.txId}-${i}`}
               display="flex"
               justifyContent="space-between"
               alignItems="center"
               borderBottom={`4px solid ${colors.primary[500]}`}
+              colors={colors.grey[100]}
               p="15px"
             >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {transaction.person}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {transaction.action}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{transaction.date}</Box>
-              <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                {transaction.item}
-              </Box>
+              <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
+                Recent Activity
+              </Typography>
             </Box>
-          ))}
-        </Box>
+            {/* Rendering fetched activities */}
+            {activities.map((activity) => (
+              <Box
+                key={activity.Action_Number}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                p="15px"
+              >
+                <Box>
+                  <Typography color={colors.grey[100]}>
+                    {activity.Action_Description}
+                  </Typography>
+                </Box>
+                <Box color={colors.grey[100]}>{activity.DateTime}</Box>
+              </Box>
+            ))}
+          </Box>
         <Box
           gridColumn="span 4"
           gridRow="span 2"
