@@ -30,12 +30,3 @@ VALUES
 ('3456', 'Alice Johnson', 'User', 'alicejohnson@example.com', 'History 3', 'Storage', 'Bob Williams'),
 ('4567', 'Bob Williams', 'Admin', 'bobwilliams@example.com', 'History 4', 'Office', 'Alice Johnson'),
 ('5678', 'Charlie Brown', 'User', 'charliebrown@example.com', 'History 5', 'Shipping', 'John Doe');
-
--- Insert data into the History table
-INSERT INTO History (Action_Number, Asset_ID, Member_ID, Action_Type, Action_Description, DateTime) 
-VALUES 
-(1, 1, '1234', 'Checkout', 'Radio 1 checked out by John Doe', '2023-01-05 10:15:00'),
-(2, '2345', 'Checkin', 'Radio 2 checked in by Jane Smith', '2023-02-10 14:30:00'),
-(3, '3456', 'Update', 'Radio 3 information updated by Alice Johnson', '2023-03-15 09:45:00'),
-(4, '4567', 'Checkout', 'Radio 4 checked out by Bob Williams', '2023-04-20 11:20:00'),
-(5, '5678', 'Checkin', 'Radio 5 checked in by Charlie Brown', '2023-05-25 16:00:00');

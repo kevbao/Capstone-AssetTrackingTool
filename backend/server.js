@@ -56,7 +56,7 @@ app.get('/', (req, res) => {
 app.get('/Asset', (req, res) => {
     const sql = "SELECT * FROM Asset";
     db.query(sql, (err, data) => {
-        if (err) return res.json(err);
+        if(err) return res.json(err);
         return res.json(data);
     })
 })
@@ -65,7 +65,7 @@ app.get('/Asset', (req, res) => {
 app.get('/Member', (req, res) => {
     const sql = "SELECT * FROM Member";
     db.query(sql, (err, data) => {
-        if (err) return res.json(err);
+        if(err) return res.json(err);
         return res.json(data);
     })
 })
@@ -73,7 +73,7 @@ app.get('/Member', (req, res) => {
 app.get('/Location', (req, res) => {
     const sql = "SELECT * FROM Location";
     db.query(sql, (err, data) => {
-        if (err) return res.json(err);
+        if(err) return res.json(err);
         return res.json(data);
     })
 })
@@ -81,19 +81,10 @@ app.get('/Location', (req, res) => {
 app.get('/Accessory', (req, res) => {
     const sql = "SELECT * FROM Accessory";
     db.query(sql, (err, data) => {
-        if (err) return res.json(err);
+        if(err) return res.json(err);
         return res.json(data);
     })
 })
-
-app.get('/History', (req, res) => {
-    const sql = "SELECT * FROM History";
-    db.query(sql, (err, data) => {
-        if (err) return res.json(err);
-        return res.json(data);
-    })
-})
-
 // Add more tables here when created.
 
 // ******************************************************************************************
@@ -109,7 +100,7 @@ app.post('/addAsset', (req, res) => {
 
     const sql = `INSERT INTO Asset 
                 (Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, Category, Status, Purchase_Date, Cost, Deployed) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         formData.Asset_Name,
@@ -132,7 +123,7 @@ app.post('/addAsset', (req, res) => {
         }
         return res.status(200).json({ message: 'Asset added successfully' });
     });
-
+    
 });
 
 app.delete('/deleteAsset/:id', (req, res) => {
@@ -142,8 +133,8 @@ app.delete('/deleteAsset/:id', (req, res) => {
 
     db.query(sql, [assetID], (err, result) => {
         if (err) {
-            console.error('Database query error:', err);
-            return res.status(500).json({ error: 'Database query error' });
+        console.error('Database query error:', err);
+        return res.status(500).json({ error: 'Database query error' });
         }
         return res.status(200).json({ message: 'Asset deleted successfully' });
     });
@@ -218,7 +209,7 @@ app.post('/addLocation', (req, res) => {
         }
         return res.status(200).json({ message: 'Location added successfully' });
     });
-
+    
 });
 
 // Add a new Member
@@ -228,7 +219,7 @@ app.post('/addMember', (req, res) => {
     console.log('New User Added:', formData); // Verify if formData is received correctly
 
     const sql = `INSERT INTO Member 
-                (GD_id, Name, Permissions, Email, History, Department, Manager, Check_in_time) 
+                (GD_id, Name, Permissions, Email, History, Department, Manager) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
@@ -238,8 +229,7 @@ app.post('/addMember', (req, res) => {
         formData.Email,
         formData.History,
         formData.Department,
-        formData.Manager,
-        formData.Check_in_time
+        formData.Manager
     ];
 
     db.query(sql, values, (err, result) => {
@@ -249,92 +239,62 @@ app.post('/addMember', (req, res) => {
         }
         return res.status(200).json({ message: 'Member added successfully' });
     });
-
+    
 });
 
 //Checkout an asset to a specific member
 app.put('/checkoutAsset/:assetID/:memberID', (req, res) => {
     const assetID = req.params.assetID;
     const memberID = req.params.memberID;
-
+  
     // Check if the memberID exists in the Members table
     const checkMemberExistenceQuery = 'SELECT * FROM Member WHERE GD_id = ?';
-
+  
     db.query(checkMemberExistenceQuery, [memberID], (checkErr, checkResult) => {
-        if (checkErr) {
-            console.error('Database query error:', checkErr);
-            return res.status(500).json({ error: 'Database query error' });
+      if (checkErr) {
+        console.error('Database query error:', checkErr);
+        return res.status(500).json({ error: 'Database query error' });
+      }
+  
+      if (checkResult.length === 0) {
+        // MemberID does not exist in the Members table
+        console.log('MemberID does not exist, Asset was not checked out')
+        return res.status(400).json({ error: 'MemberID does not exist' });
+      }
+  
+      // If memberID exists, proceed with updating the Asset table
+      const updateAssetQuery = 'UPDATE Asset SET Member_ID = ? WHERE Asset_ID = ?';
+  
+      db.query(updateAssetQuery, [memberID, assetID], (updateErr, updateResult) => {
+        if (updateErr) {
+          console.error('Database query error:', updateErr);
+          return res.status(500).json({ error: 'Database query error' });
         }
-
-        if (checkResult.length === 0) {
-            // MemberID does not exist in the Members table
-            console.log('MemberID does not exist, Asset was not checked out')
-            return res.status(400).json({ error: 'MemberID does not exist' });
-        }
-
-        // If memberID exists, proceed with updating the Asset table
-        const updateAssetQuery = 'UPDATE Asset SET Member_ID = ? WHERE Asset_ID = ?';
-
-        db.query(updateAssetQuery, [memberID, assetID], (updateErr, updateResult) => {
-            if (updateErr) {
-                console.error('Database query error:', updateErr);
-                return res.status(500).json({ error: 'Database query error' });
-            }
-
-            // Insert into History table
-            const insertHistoryQuery = `
-                INSERT INTO History (Action_Description, DateTime)
-                VALUES ('Asset checked out to ${memberID}', NOW())
-            `;
-
-            db.query(insertHistoryQuery, [assetID, memberID], (historyErr, historyResult) => {
-                if (historyErr) {
-                    console.error('Database query error:', historyErr);
-                    return res.status(500).json({ error: 'Database query error' });
-                }
-
-                console.log('Asset Checked out to:', memberID);
-                return res.status(200).json({ message: 'Asset checked out successfully' });
-            });
-        });
+        console.log('Asset Checked out to:', memberID)
+        return res.status(200).json({ message: 'Asset checked out successfully' });
+      });
     });
 });
 
-
-// Checkin a checked-out Asset
+// Checkin a checked out Asset
 app.put('/checkinAsset/:assetID', (req, res) => {
     const assetID = req.params.assetID;
-
-    const updateAssetQuery = 'UPDATE Asset SET Member_ID = NULL WHERE Asset_ID = ?';
-
-    db.query(updateAssetQuery, [assetID], (updateErr, updateResult) => {
-        if (updateErr) {
-            console.error('Database query error:', updateErr);
-            return res.status(500).json({ error: 'Database query error' });
-        }
-
-        // Insert into History table
-        const insertHistoryQuery = `
-            INSERT INTO History (Action_Description, DateTime)
-            VALUES ('Asset ${assetID} checked in', NOW())
-        `;
-
-        db.query(insertHistoryQuery, [assetID], (historyErr, historyResult) => {
-            if (historyErr) {
-                console.error('Database query error:', historyErr);
-                return res.status(500).json({ error: 'Database query error' });
-            }
-
-            console.log('Asset', assetID, 'successfully checked in.');
-            return res.status(200).json({ message: 'Asset checked in successfully' });
-        });
+  
+    const sql = 'UPDATE Asset SET Member_ID = NULL WHERE Asset_ID = ?';
+  
+    db.query(sql, [assetID], (err, result) => {
+      if (err) {
+        console.error('Database query error:', err);
+        return res.status(500).json({ error: 'Database query error' });
+      }
+      console.log('Asset', assetID, 'succesfully checked in.')
+      return res.status(200).json({ message: 'Asset checked in successfully' });
     });
 });
-
 
 // TODO: - Create functions for adding to locations table, members table, accessories table
 
 // Listen on Port 8081
-app.listen(port, () => {
+app.listen(port, ()=> {
     console.log("LISTENING")
 })

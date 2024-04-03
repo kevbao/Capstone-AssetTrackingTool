@@ -10,7 +10,6 @@ const MemberForm = () => {
     History: '',
     Department: '',
     Manager: '',
-    Check_in_time: '',
   });
 
   const handleChange = (e) => {
@@ -41,7 +40,6 @@ const MemberForm = () => {
             History: '',
             Department: '',
             Manager: '',
-            Check_in_time: '',
         });
       })
       .catch((err) => console.error(err));

@@ -45,7 +45,12 @@ CREATE TABLE Asset (
 );
 
 CREATE TABLE History (
-    Action_Number SERIAL PRIMARY KEY,
+    Action_Number INT PRIMARY KEY,
+    Asset_ID SERIAL,
+    Member_ID VARCHAR(50),
+    Action_Type VARCHAR(100),
     Action_Description VARCHAR(255),
-    DateTime TIMESTAMP UNIQUE
+    DateTime TIMESTAMP UNIQUE,
+    CONSTRAINT fk_History_Asset FOREIGN KEY (Asset_ID) REFERENCES Asset(Asset_ID),
+    CONSTRAINT fk_History_Member FOREIGN KEY (Member_ID) REFERENCES Member(GD_id)
 );
