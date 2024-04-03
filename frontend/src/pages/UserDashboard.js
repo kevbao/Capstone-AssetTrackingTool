@@ -4,11 +4,19 @@ import '../assets/styles/UserDashboard.css';
 
 const UserDashboard = () => {
   const [locations, setLocations] = useState([]);
+  const [history, setHistory] = useState([]);
 
   useEffect(() => {
+    // Fetch Locations
     fetch('http://localhost:8081/Location')
       .then((res) => res.json())
       .then((data) => setLocations(data))
+      .catch((err) => console.error(err));
+
+    // Fetch History
+    fetch('http://localhost:8081/History')
+      .then((res) => res.json())
+      .then((data) => setHistory(data))
       .catch((err) => console.error(err));
   }, []);
 
@@ -29,9 +37,22 @@ const UserDashboard = () => {
         {/* Recent Activity */}
         <div className="dashboard-recent-activity">
           <h2>Recent Activity</h2>
-          <div className="dashboard-activity-item">Laptop 1 was assigned to John Doe on 2023-11-01.</div>
-          <div className="dashboard-activity-item">Monitor 1 was moved to Office 3 on 2023-10-28.</div>
-          <div className="dashboard-activity-item">Laptop 2 was added to inventory on 2023-10-25.</div>
+          <table className="dashboard-location-table">
+          <thead>
+            <tr>
+              <th className="dashboard-location-table-th">Action Description</th>
+              <th className="dashboard-location-table-th">Date Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            {history.map((activity) => (
+              <tr key={activity.id}>
+                <td className="dashboard-location-table-td">{activity.Action_Description}</td>
+                <td className="dashboard-location-table-td">{activity.DateTime}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
         </div>
 
         {/* Location Table */}
