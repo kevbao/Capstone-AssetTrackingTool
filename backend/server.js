@@ -100,7 +100,7 @@ app.post('/addAsset', (req, res) => {
 
     const sql = `INSERT INTO Asset 
                 (Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, Category, Status, Purchase_Date, Cost, Deployed) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         formData.Asset_Name,
