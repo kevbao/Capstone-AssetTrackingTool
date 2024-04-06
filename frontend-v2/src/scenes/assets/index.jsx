@@ -1,4 +1,4 @@
-import { Box, Button, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
 import Header from "../../components/Header";
@@ -8,6 +8,9 @@ const Asset = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [assetData, setAssetData] = useState([]);
+  const [checkoutAssetID, setCheckoutAssetID] = useState(null);
+  const [checkoutMemberID, setCheckoutMemberID] = useState('');
+  const [openCheckoutDialog, setOpenCheckoutDialog] = useState(false);
 
   useEffect(() => {
     fetchAssetData();
@@ -17,16 +20,15 @@ const Asset = () => {
     fetch('http://localhost:8081/Asset')
       .then((res) => res.json())
       .then((data) => {
-        // add unique id property to each row
         const newData = data.map((row) => ({
           ...row,
-          id: row.Asset_ID // Asset_ID is unique
+          id: row.Asset_ID
         }));
         setAssetData(newData);
       })
       .catch((err) => console.log(err));
   };
-  
+
   const handleCheckIn = (assetID) => {
     fetch(`http://localhost:8081/checkinAsset/${assetID}`, {
       method: 'PUT',
@@ -39,16 +41,9 @@ const Asset = () => {
       .catch((err) => console.error(err));
   };
 
-  const handleCheckOut = (assetID, memberID) => {
-    fetch(`http://localhost:8081/checkoutAsset/${assetID}/${memberID}`, {
-      method: 'PUT',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.message);
-        fetchAssetData();
-      })
-      .catch((err) => console.error(err));
+  const handleCheckOut = (assetID) => {
+    setCheckoutAssetID(assetID);
+    setOpenCheckoutDialog(true);
   };
 
   const handleDelete = (assetID) => {
@@ -59,6 +54,21 @@ const Asset = () => {
       .then((res) => res.json())
       .then((data) => {
         console.log(data.message);
+        fetchAssetData();
+      })
+      .catch((err) => console.error(err));
+  };
+
+  const handleCheckoutConfirm = () => {
+    fetch(`http://localhost:8081/checkoutAsset/${checkoutAssetID}/${checkoutMemberID}`, {
+      method: 'PUT',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data.message);
+        setCheckoutAssetID(null);
+        setCheckoutMemberID('');
+        setOpenCheckoutDialog(false);
         fetchAssetData();
       })
       .catch((err) => console.error(err));
@@ -83,32 +93,34 @@ const Asset = () => {
       width: 250,
       renderCell: (params) => (
         <Box display="flex" justifyContent="space-between">
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleCheckIn(params.row.Asset_ID)}
-            style={{ padding: 2 }} // Add margin-right for space
-          >
-            In
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleCheckOut(params.row.Asset_ID)}
-            style={{ margin: '0 8px' }} // Add margin for space
-          >
-            Out
-          </Button>
+          {params.row.Member_ID ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleCheckIn(params.row.Asset_ID)}
+              style={{ margin: '0 8px' }}
+            >
+              Checkin
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => handleCheckOut(params.row.Asset_ID)}
+              style={{ margin: '0 8px' }}
+            >
+              Checkout
+            </Button>
+          )}
           <Button
             variant="contained"
             color="error"
             onClick={() => handleDelete(params.row.Asset_ID)}
-            style={{ padding: 2 }} // Add margin-left for space
+            style={{ padding: 2 }}
           >
             Delete
           </Button>
         </Box>
-
       ),
     },
   ];
@@ -152,6 +164,23 @@ const Asset = () => {
           pageSize={10}
         />
       </Box>
+
+      {/* Checkout Dialog */}
+      <Dialog open={openCheckoutDialog} onClose={() => setOpenCheckoutDialog(false)}>
+        <DialogTitle>Checkout Asset</DialogTitle>
+        <DialogContent>
+          <Typography>Enter Member ID:</Typography>
+          <TextField
+            value={checkoutMemberID}
+            onChange={(e) => setCheckoutMemberID(e.target.value)}
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenCheckoutDialog(false)}>Cancel</Button>
+          <Button onClick={handleCheckoutConfirm} variant="contained" color="primary">Checkout</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
