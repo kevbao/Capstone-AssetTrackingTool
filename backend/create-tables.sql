@@ -10,8 +10,8 @@ CREATE TABLE Accessory (
 );
 
 CREATE TABLE Location (
-    Location_id SERIAL PRIMARY KEY,
-    Name VARCHAR(60),
+    Location_id SERIAL,
+    Name VARCHAR(60) PRIMARY KEY,
     GD_specific_location VARCHAR(40),
     Description VARCHAR(255),
     LocationType VARCHAR(60)
@@ -41,7 +41,9 @@ CREATE TABLE Asset (
     Cost VARCHAR(40),
     Deployed VARCHAR(40),
     Member_ID VARCHAR(50) NULL,
-    FOREIGN KEY (Member_ID) REFERENCES Member(GD_id)
+    Location_Name VARCHAR(60) NULL,
+    FOREIGN KEY (Member_ID) REFERENCES Member(GD_id),
+    FOREIGN KEY (Location_Name) REFERENCES Location(Name)
 );
 
 CREATE TABLE History (

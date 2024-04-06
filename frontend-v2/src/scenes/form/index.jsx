@@ -1,17 +1,38 @@
-import { Box, Button, TextField } from "@mui/material";
+import React from 'react';
+import { Box, Button, TextField, MenuItem } from "@mui/material";
 import { Formik } from "formik";
 import * as yup from "yup";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import Header from "../../components/Header";
 
 const Form = () => {
-  const isNonMobile = useMediaQuery("(min-width:600px)");
+  const handleFormSubmit = (values, { resetForm, setSubmitting }) => {
+    // Set the form data
+    const formData = {
+      GD_id: values.GD_id,
+      Name: values.Name,
+      Permissions: values.Permissions,
+      Email: values.Email,
+      History: values.History,
+      Department: values.Department,
+      Manager: values.Manager
+    };
 
-  const handleFormSubmit = (values, {resetForm}) => {
-    console.log(values); // Log the form values for now
-
-    resetForm();
-
+    fetch('http://localhost:8081/addMember', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(formData)
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      alert(data.message);
+      resetForm(); // Reset form after successful submission
+    })
+    .catch((err) => console.error(err))
+    .finally(() => {
+      setSubmitting(false); // Reset form submission state
+    });
   };
 
   return (
@@ -21,7 +42,7 @@ const Form = () => {
       <Formik
         onSubmit={handleFormSubmit}
         initialValues={initialValues}
-        validationSchema={checkoutSchema}
+        validationSchema={memberSchema}
       >
         {({
           values,
@@ -30,16 +51,13 @@ const Form = () => {
           handleBlur,
           handleChange,
           handleSubmit,
-          resetForm,
+          isSubmitting
         }) => (
           <form onSubmit={handleSubmit}>
             <Box
               display="grid"
               gap="30px"
               gridTemplateColumns="repeat(2, minmax(0, 1fr))"
-              sx={{
-                "& > div": { gridColumn: isNonMobile ? undefined : "span 2" },
-              }}
             >
               <TextField
                 fullWidth
@@ -58,56 +76,44 @@ const Form = () => {
                 fullWidth
                 variant="filled"
                 type="text"
-                label="First Name"
+                label="Name"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.firstName}
-                name="firstName"
-                error={!!touched.firstName && !!errors.firstName}
-                helperText={touched.firstName && errors.firstName}
+                value={values.Name}
+                name="Name"
+                error={!!touched.Name && !!errors.Name}
+                helperText={touched.Name && errors.Name}
                 sx={{ gridColumn: "span 2" }}
               />
               <TextField
+                select
                 fullWidth
                 variant="filled"
-                type="text"
-                label="Last Name"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.lastName}
-                name="lastName"
-                error={!!touched.lastName && !!errors.lastName}
-                helperText={touched.lastName && errors.lastName}
-                sx={{ gridColumn: "span 2" }}
-
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Email"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.email}
-                name="email"
-                error={!!touched.email && !!errors.email}
-                helperText={touched.email && errors.email}
-                sx={{ gridColumn: "span 4" }}
-
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
                 label="Permissions"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.permissions}
-                name="permissions"
-                error={!!touched.permissions && !!errors.permissions}
-                helperText={touched.permissions && errors.permissions}
+                value={values.Permissions}
+                name="Permissions"
+                error={!!touched.Permissions && !!errors.Permissions}
+                helperText={touched.Permissions && errors.Permissions}
                 sx={{ gridColumn: "span 2" }}
-
+              >
+                <MenuItem value="Admin">Admin</MenuItem>
+                <MenuItem value="User">User</MenuItem>
+                <MenuItem value="Manager">Manager</MenuItem>
+              </TextField>
+              <TextField
+                fullWidth
+                variant="filled"
+                type="email"
+                label="Email"
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.Email}
+                name="Email"
+                error={!!touched.Email && !!errors.Email}
+                helperText={touched.Email && errors.Email}
+                sx={{ gridColumn: "span 4" }}
               />
               <TextField
                 fullWidth
@@ -116,12 +122,11 @@ const Form = () => {
                 label="History"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.history}
-                name="history"
-                error={!!touched.history && !!errors.history}
-                helperText={touched.history && errors.history}
+                value={values.History}
+                name="History"
+                error={!!touched.History && !!errors.History}
+                helperText={touched.History && errors.History}
                 sx={{ gridColumn: "span 2" }}
-
               />
               <TextField
                 fullWidth
@@ -130,10 +135,10 @@ const Form = () => {
                 label="Department"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.department}
-                name="department"
-                error={!!touched.department && !!errors.department}
-                helperText={touched.department && errors.department}
+                value={values.Department}
+                name="Department"
+                error={!!touched.Department && !!errors.Department}
+                helperText={touched.Department && errors.Department}
               />
               <TextField
                 fullWidth
@@ -142,27 +147,20 @@ const Form = () => {
                 label="Manager"
                 onBlur={handleBlur}
                 onChange={handleChange}
-                value={values.manager}
-                name="manager"
-                error={!!touched.manager && !!errors.manager}
-                helperText={touched.manager && errors.manager}
-              />
-              <TextField
-                fullWidth
-                variant="filled"
-                type="text"
-                label="Check-in Time"
-                onBlur={handleBlur}
-                onChange={handleChange}
-                value={values.check_in_time}
-                name="check_in_time"
-                error={!!touched.check_in_time && !!errors.check_in_time}
-                helperText={touched.check_in_time && errors.check_in_time}
+                value={values.Manager}
+                name="Manager"
+                error={!!touched.Manager && !!errors.Manager}
+                helperText={touched.Manager && errors.Manager}
               />
             </Box>
             <Box display="flex" justifyContent="end" mt="20px">
-              <Button type="submit" color="secondary" variant="contained">
-                Add Member
+              <Button
+                type="submit"
+                color="secondary"
+                variant="contained"
+                disabled={isSubmitting} // Disable button during submission
+              >
+                {isSubmitting ? 'Adding...' : 'Add Member'}
               </Button>
             </Box>
           </form>
@@ -172,28 +170,24 @@ const Form = () => {
   );
 };
 
-const checkoutSchema = yup.object().shape({
-  GD_id: yup.string().required("required"),
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  permissions: yup.string().required("required"),
-  history: yup.string().required("required"),
-  department: yup.string().required("required"),
-  manager: yup.string().required("required"),
-  check_in_time: yup.string().required("required"),
+const memberSchema = yup.object().shape({
+  GD_id: yup.string().required("Required"),
+  Name: yup.string().required("Required"),
+  Permissions: yup.string().required("Required"),
+  Email: yup.string().email("Invalid email").required("Required"),
+  History: yup.string().required("Required"),
+  Department: yup.string().required("Required"),
+  Manager: yup.string().required("Required"),
 });
 
 const initialValues = {
   GD_id: "",
-  firstName: "",
-  lastName: "",
-  email: "",
-  permissions: "",
-  history: "",
-  department: "",
-  manager: "",
-  check_in_time: "",
+  Name: "",
+  Permissions: "",
+  Email: "",
+  History: "",
+  Department: "",
+  Manager: "",
 };
 
 export default Form;

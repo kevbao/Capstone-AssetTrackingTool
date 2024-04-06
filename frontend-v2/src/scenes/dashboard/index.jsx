@@ -154,24 +154,30 @@ useEffect(() => {
                 Recent Activity
               </Typography>
             </Box>
-            {/* Rendering fetched activities */}
-             {activities.map((activity) => (
-              <Box
-                key={activity.Action_Number}
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                borderBottom={`4px solid ${colors.primary[500]}`}
-                p="15px"
-              >
-                <Box>
-                  <Typography color={colors.grey[100]}>
-                    {activity.Action_Description}
-                  </Typography>
+              {/* Recent Activities */}
+              {activities.slice().reverse().map((activity, index) => (
+                <Box
+                  key={activity.Action_Number}
+                  display="flex"
+                  justifyContent="space-between"
+                  alignItems="center"
+                  borderBottom={`4px solid ${colors.primary[500]}`}
+                  p="15px"
+                  sx={{
+                    fontWeight: index === 0 ? 'bold' : 'normal', // Bold font for most recent activity
+                    color: index === 0 ? colors.greenAccent[500] : colors.grey[100], // Green accent font for most recent activity
+                  }}
+                >
+                  <Box>
+                    <Typography color={index === 0 ? colors.greenAccent[500] : colors.grey[100]} fontWeight={index === 0 ? 'bold' : 'normal'}>
+                      {activity.Action_Description}
+                    </Typography>
+                  </Box>
+                  <Box color={index === 0 ? colors.greenAccent[500] : colors.grey[100]} fontWeight={index === 0 ? 'bold' : 'normal'}>
+                    {new Date(activity.DateTime).toLocaleString()}
+                  </Box>
                 </Box>
-                <Box color={colors.grey[100]}>{activity.DateTime}</Box>
-              </Box>
-            ))} 
+              ))}
           </Box>
         <Box
           gridColumn="span 4"

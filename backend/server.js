@@ -42,6 +42,7 @@ app.get('/', (req, res) => {
                     <li><a href="/Member">View Members</a></li>
                     <li><a href="/Location">View Locations</a></li>
                     <li><a href="/Accessory">View Accessories</a></li>
+                    <li><a href="/History">View Activity</a></li>
                 </ul>
             </body>
         </html>
@@ -202,13 +203,14 @@ app.post('/addLocation', (req, res) => {
     console.log(formData); // Verify if formData is received correctly
 
     const sql = `INSERT INTO Location 
-                (Name, Description, LocationType) 
-                VALUES (?, ?, ?)`;
+                (Name, GD_specific_location, Description, LocationType) 
+                VALUES (?, ?, ?, ?)`;
 
     const values = [
         formData.Name,
+        formData.GD_specific_location,
         formData.Description,
-        formData.LocationType,
+        formData.LocationType
     ];
 
     db.query(sql, values, (err, result) => {
@@ -221,6 +223,54 @@ app.post('/addLocation', (req, res) => {
     
 });
 
+// Delete a location based on its ID
+app.delete('/deleteLocation/:id', (req, res) => {
+    const locationID = req.params.id;
+    const sql = "DELETE FROM Location WHERE Location_id = ?";
+    console.log("Location Deleted:", locationID)
+
+    db.query(sql, [locationID], (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Location deleted successfully' });
+    });
+});
+
+// Update a location based on its ID
+app.put('/updateLocation/:id', (req, res) => {
+    const locationID = req.params.id;
+    const updatedLocationData = req.body; // Data sent from the frontend to update the location
+
+    const sql = `UPDATE Location 
+                SET 
+                Name = ?,
+                GD_specific_location = ?,
+                Description = ?,
+                LocationType = ?
+                WHERE Location_id = ?`;
+
+    console.log("Location Updated to:", updatedLocationData)
+
+    const values = [
+        updatedLocationData.Name,
+        updatedLocationData.GD_specific_location,
+        updatedLocationData.Description,
+        updatedLocationData.LocationType,
+        locationID // locationID to identify the location to update
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Location updated successfully' });
+    });
+});
+
+
 // Add a new Member
 app.post('/addMember', (req, res) => {
     const formData = req.body; // Retrieve the entire form data object
@@ -229,7 +279,7 @@ app.post('/addMember', (req, res) => {
 
     const sql = `INSERT INTO Member 
                 (GD_id, Name, Permissions, Email, History, Department, Manager) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
     const values = [
         formData.GD_id,
@@ -251,60 +301,226 @@ app.post('/addMember', (req, res) => {
     
 });
 
-//Checkout an asset to a specific member
-app.put('/checkoutAsset/:assetID/:memberID', (req, res) => {
+// Delete a member based on its ID
+app.delete('/deleteMember/:id', (req, res) => {
+    const memberID = req.params.id;
+    const sql = "DELETE FROM Member WHERE GD_id = ?";
+    console.log("Member Deleted:", memberID)
+
+    db.query(sql, [memberID], (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Member deleted successfully' });
+    });
+});
+
+// Update a member based on its ID
+app.put('/updateMember/:id', (req, res) => {
+    const memberID = req.params.id;
+    const updatedMemberData = req.body; // Data sent from the frontend to update the member
+
+    const sql = `UPDATE Member 
+                SET 
+                Name = ?,
+                Permissions = ?,
+                Email = ?,
+                History = ?,
+                Department = ?,
+                Manager = ?
+                WHERE GD_id = ?`;
+
+    console.log("Member Updated to:", updatedMemberData)
+
+    const values = [
+        updatedMemberData.Name,
+        updatedMemberData.Permissions,
+        updatedMemberData.Email,
+        updatedMemberData.History,
+        updatedMemberData.Department,
+        updatedMemberData.Manager,
+        memberID // memberID to identify the member to update
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Member updated successfully' });
+    });
+});
+
+// Add an accessory
+app.post('/addAccessory', (req, res) => {
+    const formData = req.body; // Retrieve the entire form data object
+
+    console.log("New Accessory Added:", formData); // Verify if formData is received correctly
+
+    const sql = `INSERT INTO Accessory 
+                (Name, Description, Category, Model, Total, numCheckedOut, cost) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    const values = [
+        formData.Name,
+        formData.Description,
+        formData.Category,
+        formData.Model,
+        formData.Total,
+        formData.numCheckedOut,
+        formData.cost
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('Database query error:', err); // Log the specific database query error
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Accessory added successfully' });
+    });
+});
+
+// Delete an accessory based on its ID
+app.delete('/deleteAccessory/:id', (req, res) => {
+    const accessoryID = req.params.id;
+    const sql = "DELETE FROM Accessory WHERE Accessory_id = ?";
+    console.log("Accessory Deleted:", accessoryID)
+
+    db.query(sql, [accessoryID], (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Accessory deleted successfully' });
+    });
+});
+
+// Update an accessory based on its ID
+app.put('/updateAccessory/:id', (req, res) => {
+    const accessoryID = req.params.id;
+    const updatedAccessoryData = req.body; // Data sent from the frontend to update the accessory
+
+    const sql = `UPDATE Accessory 
+                SET 
+                Name = ?,
+                Description = ?,
+                Category = ?,
+                Model = ?,
+                Total = ?,
+                numCheckedOut = ?,
+                cost = ?
+                WHERE Accessory_id = ?`;
+
+    console.log("Accessory Updated to:", updatedAccessoryData)
+
+    const values = [
+        updatedAccessoryData.Name,
+        updatedAccessoryData.Description,
+        updatedAccessoryData.Category,
+        updatedAccessoryData.Model,
+        updatedAccessoryData.Total,
+        updatedAccessoryData.numCheckedOut,
+        updatedAccessoryData.cost,
+        accessoryID // accessoryID to identify the accessory to update
+    ];
+
+    db.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+        return res.status(200).json({ message: 'Accessory updated successfully' });
+    });
+});
+
+// Checkout an asset to a specific member with location
+app.put('/checkoutAsset/:assetID/:memberName/:locationName', (req, res) => {
     const assetID = req.params.assetID;
-    const memberID = req.params.memberID;
+    const memberName = req.params.memberName;
+    const locationName = req.params.locationName;
 
-    // Check if the memberID exists in the Members table
-    const checkMemberExistenceQuery = 'SELECT * FROM Member WHERE GD_id = ?';
+    // Check if the memberName exists in the Members table
+    const checkMemberExistenceQuery = 'SELECT GD_id FROM Member WHERE Name = ?';
 
-    db.query(checkMemberExistenceQuery, [memberID], (checkErr, checkResult) => {
+    db.query(checkMemberExistenceQuery, [memberName], (checkErr, checkResult) => {
         if (checkErr) {
             console.error('Database query error:', checkErr);
             return res.status(500).json({ error: 'Database query error' });
         }
 
         if (checkResult.length === 0) {
-            // MemberID does not exist in the Members table
-            console.log('MemberID does not exist, Asset was not checked out')
-            return res.status(400).json({ error: 'MemberID does not exist' });
+            // Member with the specified name does not exist
+            console.log('Member with the specified name does not exist');
+            return res.status(400).json({ error: 'Member with the specified name does not exist' });
         }
 
-        // If memberID exists, proceed with updating the Asset table
-        const updateAssetQuery = 'UPDATE Asset SET Member_ID = ? WHERE Asset_ID = ?';
+        // Extract GD_id from the query result
+        const memberID = checkResult[0].GD_id;
 
-        db.query(updateAssetQuery, [memberID, assetID], (updateErr, updateResult) => {
-            if (updateErr) {
-                console.error('Database query error:', updateErr);
+        // Fetch the location ID based on the provided location name
+        const getLocationIDQuery = 'SELECT Location_id FROM Location WHERE Name = ?';
+
+        db.query(getLocationIDQuery, [locationName], (locationErr, locationResult) => {
+            if (locationErr) {
+                console.error('Database query error:', locationErr);
                 return res.status(500).json({ error: 'Database query error' });
             }
 
-            // Insert into History table
-            const insertHistoryQuery = `
-                INSERT INTO History (Action_Description, DateTime)
-                VALUES ('Asset checked out to ${memberID}', NOW())
-            `;
+            if (locationResult.length === 0) {
+                // Location with the specified name does not exist
+                console.log('Location with the specified name does not exist');
+                return res.status(400).json({ error: 'Location with the specified name does not exist' });
+            }
 
-            db.query(insertHistoryQuery, [assetID, memberID], (historyErr, historyResult) => {
-                if (historyErr) {
-                    console.error('Database query error:', historyErr);
+            const locationID = locationResult[0].Location_id;
+
+            // If memberName and locationName exist, proceed with updating the Asset table
+            const updateAssetQuery = 'UPDATE Asset SET Member_ID = ?, Location_Name = ? WHERE Asset_ID = ?';
+
+            db.query(updateAssetQuery, [memberID, locationName, assetID], (updateErr, updateResult) => {
+                if (updateErr) {
+                    console.error('Database query error:', updateErr);
                     return res.status(500).json({ error: 'Database query error' });
                 }
 
-                console.log('Asset Checked out to:', memberID);
-                return res.status(200).json({ message: 'Asset checked out successfully' });
+                // Fetch the name of the asset
+                const fetchAssetNameQuery = 'SELECT Asset_Name FROM Asset WHERE Asset_ID = ?';
+                db.query(fetchAssetNameQuery, [assetID], (fetchErr, fetchResult) => {
+                    if (fetchErr) {
+                        console.error('Database query error:', fetchErr);
+                        return res.status(500).json({ error: 'Database query error' });
+                    }
+
+                    const assetName = fetchResult[0].Asset_Name;
+
+                    // Insert into History table
+                    const insertHistoryQuery = `
+                        INSERT INTO History (Action_Description, DateTime)
+                        VALUES ('${assetName} checked out to ${memberName} at ${locationName}', NOW())
+                    `;
+
+                    db.query(insertHistoryQuery, (historyErr, historyResult) => {
+                        if (historyErr) {
+                            console.error('Database query error:', historyErr);
+                            return res.status(500).json({ error: 'Database query error' });
+                        }
+
+                        console.log('Asset checked out to:', memberName);
+                        return res.status(200).json({ message: 'Asset checked out successfully' });
+                    });
+                });
             });
         });
     });
 });
 
-
 // Checkin a checked-out Asset
 app.put('/checkinAsset/:assetID', (req, res) => {
     const assetID = req.params.assetID;
 
-    const updateAssetQuery = 'UPDATE Asset SET Member_ID = NULL WHERE Asset_ID = ?';
+    // Update Asset table to set Member_ID to NULL and Location_Name to NULL
+    const updateAssetQuery = 'UPDATE Asset SET Member_ID = NULL, Location_Name = NULL WHERE Asset_ID = ?';
 
     db.query(updateAssetQuery, [assetID], (updateErr, updateResult) => {
         if (updateErr) {
@@ -312,25 +528,34 @@ app.put('/checkinAsset/:assetID', (req, res) => {
             return res.status(500).json({ error: 'Database query error' });
         }
 
-        // Insert into History table
-        const insertHistoryQuery = `
-            INSERT INTO History (Action_Description, DateTime)
-            VALUES ('Asset ${assetID} checked in', NOW())
-        `;
-
-        db.query(insertHistoryQuery, [assetID], (historyErr, historyResult) => {
-            if (historyErr) {
-                console.error('Database query error:', historyErr);
+        // Fetch the name of the asset
+        const fetchAssetNameQuery = 'SELECT Asset_Name FROM Asset WHERE Asset_ID = ?';
+        db.query(fetchAssetNameQuery, [assetID], (fetchErr, fetchResult) => {
+            if (fetchErr) {
+                console.error('Database query error:', fetchErr);
                 return res.status(500).json({ error: 'Database query error' });
             }
 
-            console.log('Asset', assetID, 'successfully checked in.');
-            return res.status(200).json({ message: 'Asset checked in successfully' });
+            const assetName = fetchResult[0].Asset_Name;
+
+            // Insert into History table
+            const insertHistoryQuery = `
+                INSERT INTO History (Action_Description, DateTime)
+                VALUES ('${assetName} checked in', NOW())
+            `;
+
+            db.query(insertHistoryQuery, (historyErr, historyResult) => {
+                if (historyErr) {
+                    console.error('Database query error:', historyErr);
+                    return res.status(500).json({ error: 'Database query error' });
+                }
+
+                console.log('Asset', assetName, 'successfully checked in.');
+                return res.status(200).json({ message: 'Asset checked in successfully' });
+            });
         });
     });
 });
-
-// TODO: - Create functions for adding to locations table, members table, accessories table
 
 // Listen on Port 8081
 app.listen(port, ()=> {
