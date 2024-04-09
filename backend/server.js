@@ -476,7 +476,7 @@ app.put('/checkoutAsset/:assetID/:memberName/:locationName', (req, res) => {
             const locationID = locationResult[0].Location_id;
 
             // If memberName and locationName exist, proceed with updating the Asset table
-            const updateAssetQuery = 'UPDATE Asset SET Member_ID = ?, Location_Name = ? WHERE Asset_ID = ?';
+            const updateAssetQuery = 'UPDATE Asset SET Member_ID = ?, Location_Name = ?, Status = "In Use" WHERE Asset_ID = ?';
 
             db.query(updateAssetQuery, [memberID, locationName, assetID], (updateErr, updateResult) => {
                 if (updateErr) {
@@ -514,6 +514,49 @@ app.put('/checkoutAsset/:assetID/:memberName/:locationName', (req, res) => {
         });
     });
 });
+
+// Checkin a checked-out Asset
+app.put('/checkinAsset/:assetID', (req, res) => {
+    const assetID = req.params.assetID;
+
+    // Update Asset table to set Member_ID to NULL and Location_Name to NULL, and Status to "Available"
+    const updateAssetQuery = 'UPDATE Asset SET Member_ID = NULL, Location_Name = NULL, Status = "Available" WHERE Asset_ID = ?';
+
+    db.query(updateAssetQuery, [assetID], (updateErr, updateResult) => {
+        if (updateErr) {
+            console.error('Database query error:', updateErr);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+
+        // Fetch the name of the asset
+        const fetchAssetNameQuery = 'SELECT Asset_Name FROM Asset WHERE Asset_ID = ?';
+        db.query(fetchAssetNameQuery, [assetID], (fetchErr, fetchResult) => {
+            if (fetchErr) {
+                console.error('Database query error:', fetchErr);
+                return res.status(500).json({ error: 'Database query error' });
+            }
+
+            const assetName = fetchResult[0].Asset_Name;
+
+            // Insert into History table
+            const insertHistoryQuery = `
+                INSERT INTO History (Action_Description, DateTime)
+                VALUES ('${assetName} checked in', NOW())
+            `;
+
+            db.query(insertHistoryQuery, (historyErr, historyResult) => {
+                if (historyErr) {
+                    console.error('Database query error:', historyErr);
+                    return res.status(500).json({ error: 'Database query error' });
+                }
+
+                console.log('Asset', assetName, 'successfully checked in.');
+                return res.status(200).json({ message: 'Asset checked in successfully' });
+            });
+        });
+    });
+});
+
 
 // Checkin a checked-out Asset
 app.put('/checkinAsset/:assetID', (req, res) => {

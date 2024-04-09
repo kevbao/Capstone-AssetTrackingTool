@@ -140,7 +140,10 @@ const Asset = () => {
     { field: "Model", headerName: "Model", flex: 1 },
     { field: "Type", headerName: "Type", flex: 1 },
     { field: "Category", headerName: "Category", flex: 1 },
-    { field: "Status", headerName: "Status", flex: 1 },
+    { field: "Status", headerName: "Status", flex: 1, renderCell: (params) => (
+        <span>{params.row.Member_ID ? "In Use" : "Available"}</span>
+      )
+    },
     { field: "Purchase_Date", headerName: "Purchase Date", flex: 1 },
     { field: "Cost", headerName: "Cost", flex: 1 },
     { field: "Deployed", headerName: "Deployed", flex: 1 },
@@ -178,7 +181,7 @@ const Asset = () => {
         </Box>
       ),
     },
-  ];
+  ];  
 
   return (
     <Box m="20px">

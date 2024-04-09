@@ -17,9 +17,9 @@ VALUES
 INSERT INTO Asset(Asset_Name, Asset_Tag, VersionHistory, Current_Image, Model, Type, Category, Status, Purchase_Date, Cost, Deployed) 
 VALUES 
 ('Radio 1', 'Tag 1', 'Version 1', 'Image 1', 'Model 1', 'Type 1', 'Category 1', 'Available', '2023-01-01', '100', 'No'),
-('Radio 2', 'Tag 2', 'Version 2', 'Image 2', 'Model 2', 'Type 2', 'Category 2', 'In Use', '2023-02-02', '200', 'Yes'),
+('Radio 2', 'Tag 2', 'Version 2', 'Image 2', 'Model 2', 'Type 2', 'Category 2', 'Available', '2023-02-02', '200', 'Yes'),
 ('Radio 3', 'Tag 3', 'Version 3', 'Image 3', 'Model 3', 'Type 3', 'Category 3', 'Available', '2023-03-03', '300', 'No'),
-('Radio 4', 'Tag 4', 'Version 4', 'Image 4', 'Model 4', 'Type 4', 'Category 4', 'In Use', '2023-04-04', '400', 'Yes'),
+('Radio 4', 'Tag 4', 'Version 4', 'Image 4', 'Model 4', 'Type 4', 'Category 4', 'Available', '2023-04-04', '400', 'Yes'),
 ('Radio 5', 'Tag 5', 'Version 5', 'Image 5', 'Model 5', 'Type 5', 'Category 5', 'Available', '2023-05-05', '500', 'No');
 
 
