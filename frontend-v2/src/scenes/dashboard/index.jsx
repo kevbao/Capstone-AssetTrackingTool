@@ -39,21 +39,27 @@ const Dashboard = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [activities, setActivities] = useState([]);
+  const [checkedIn, setCheckedIn] = useState(0);
+  const [checkedOut, setCheckedOut] = useState(0);
 
   useEffect(() => {
-    // Fetch data from backend when component mounts
-    fetch('http://localhost:8081/History')
+    // Fetch data for checked in/out counters
+    fetch('http://localhost:8081/Asset')
       .then((res) => res.json())
-      .then((data) => setActivities(data))
+      .then((data) => {
+        const checkedInCount = data.filter(asset => asset.Status === "Available").length;
+        const checkedOutCount = data.filter(asset => asset.Status === "In Use").length;
+        setCheckedIn(checkedInCount);
+        setCheckedOut(checkedOutCount);
+      })
       .catch((err) => console.error(err));
-  }, []); // Empty dependency array ensures this effect runs only once on component mount
+  }, []);
 
   useEffect(() => {
-    var chartDom1 = document.getElementById('pieChart');
-    var pieChart = echarts.init(chartDom1);
-    var pieOption;
-
-    pieOption = {
+    // Initialize pie chart
+    const chartDom1 = document.getElementById('pieChart');
+    const pieChart = echarts.init(chartDom1);
+    const pieOption = {
       tooltip: {
         trigger: 'item'
       },
@@ -61,7 +67,7 @@ const Dashboard = () => {
         top: '5%',
         left: 'center',
         textStyle: {
-          color: '#ffffff' // Set legend text color to white
+          color: '#ffffff'
         }
       },
       series: [
@@ -90,15 +96,19 @@ const Dashboard = () => {
             show: false
           },
           data: [
-            { value: 30, name: 'Currently Checked In' },
-            { value: 60, name: 'Currently Checked Out' }
+            { value: checkedIn, name: 'Currently Checked In' },
+            { value: checkedOut, name: 'Currently Checked Out' }
           ]
         }
       ]
     };
+    pieChart.setOption(pieOption);
 
-    pieOption && pieChart.setOption(pieOption);
-  }, []); // Empty dependency array ensures this effect runs only once on component mount
+    // Cleanup function for pie chart
+    return () => {
+      pieChart.dispose();
+    };
+  }, [checkedIn, checkedOut]);
 
   useEffect(() => {
     var chartDom2 = document.getElementById('lineChart');
