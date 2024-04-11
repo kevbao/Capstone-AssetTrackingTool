@@ -42,6 +42,19 @@ const Dashboard = () => {
   const [checkedIn, setCheckedIn] = useState(0);
   const [checkedOut, setCheckedOut] = useState(0);
 
+  useEffect (() => {
+    fetch('http://localhost:8081/History')
+      .then((res) => res.json())
+      .then((data) => {
+        const newData = data.map((row) => ({
+          ...row,
+          id: row.Action_Number
+        }));
+        setActivities(newData);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
   useEffect(() => {
     // Fetch data for checked in/out counters
     fetch('http://localhost:8081/Asset')
