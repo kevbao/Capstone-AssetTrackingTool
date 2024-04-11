@@ -139,11 +139,7 @@ const Asset = () => {
   };
 
   const columns = [
-    {
-      field: 'Asset_ID',
-      headerName: 'Asset ID',
-      flex: 1,
-    },
+    { field: 'Asset_ID', headerName: 'Asset ID',flex: 1, },
     { field: "Asset_Name", headerName: "Asset Name", flex: 1 },
     { field: "Asset_Tag", headerName: "Asset Tag", flex: 1 },
     { field: "VersionHistory", headerName: "Version History", flex: 1 },
@@ -235,8 +231,6 @@ const Asset = () => {
          onRowClick={handleRowClick} // Ensure onRowClick is setd
       />
       
-      {/* Render AssetDetails component if a row is selected */}
-      {selectedAsset && <AssetDetails asset={selectedAsset} />}
       </Box>
 
       {/* Checkout Dialog */}
