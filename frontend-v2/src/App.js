@@ -17,6 +17,7 @@ import AssetDetails from "./components/AssetDetails";
 import PersonDetails from "./components/PersonDetails";
 import Calendar from "./scenes/calendar";
 import FAQPage from "./scenes/faq";
+import IndivPieChart from "./scenes/pieChart";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/user-profile" element={<UserProfile />} />
                   <Route path ="/calendar" element={<Calendar />} />
                   <Route path ="/faq" element={<FAQPage />} />
+                  <Route path= "/pieChart" element={<IndivPieChart />} />
                   <Route path="/asset-details" element={<AssetDetails/>} />
                   <Route path="/person-details" element={<PersonDetails/>} />
                 </Routes>

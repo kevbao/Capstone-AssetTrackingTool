@@ -10,7 +10,7 @@ import StatBox from "../../components/StatBox";
 import QrCode2OutlinedIcon from "@mui/icons-material/QrCode2Outlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
 import React, { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as echarts from 'echarts';
 
 import {
