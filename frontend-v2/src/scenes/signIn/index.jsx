@@ -1,76 +1,84 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import Dashboard from "../dashboard";
 
-const SignIn = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const LoginPage = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
   const [error, setError] = useState("");
-  const navigate = useNavigate();
 
-  const handleSignIn = () => {
-    if (username === "admin" && password === "password") {
-      // Authentication successful, navigate to dashboard
-      navigate(Dashboard);
-      <Link to={Dashboard} />
-    } else {
-      // Authentication failed, display error message
-      setError("Invalid username or password");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://localhost:8081/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await response.json();
+      // Handle success or error response from the server
+      console.log(data);
+    } catch (error) {
+      console.error("Error:", error);
+      setError("An error occurred. Please try again later.");
     }
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
-      <Typography variant="h4" mb={4}>
-        Sign In
+    <Box sx={{ maxWidth: 400, mx: "auto", mt: 4 }}>
+      <Typography variant="h4" align="center" gutterBottom>
+        Login
       </Typography>
-      <Box
-        sx={{
-          width: "300px",
-        }}
-      >
+      <form onSubmit={handleSubmit}>
         <TextField
           fullWidth
-          label="Username"
-          variant="outlined"
           margin="normal"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleInputChange}
         />
         <TextField
           fullWidth
-          label="Password"
-          type="password"
-          variant="outlined"
           margin="normal"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          label="Password"
+          name="password"
+          type="password"
+          value={formData.password}
+          onChange={handleInputChange}
         />
         {error && (
-          <Typography color="error" sx={{ marginBottom: "10px" }}>
+          <Typography
+            variant="body2"
+            color="error"
+            align="center"
+            sx={{ mt: 2 }}
+          >
             {error}
           </Typography>
         )}
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleSignIn}
-          sx={{ marginTop: "20px" }}
-        >
-          Sign In
+        <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          Login
         </Button>
-      </Box>
+      </form>
+      <Typography variant="body2" align="center" sx={{ mt: 2 }}>
+        Don't have an account? <RouterLink to="/signup">Create one</RouterLink>
+      </Typography>
     </Box>
   );
 };
 
-export default SignIn;
+export default LoginPage;
