@@ -22,7 +22,6 @@ const Team = () => {
   const [selectedPerson, setSelectedPerson] = useState(null);
   const handleRowClick = (params) => {
     setSelectedPerson(params.row);
-    navigate('/person-details', { state: { person: params.row } }); // Navigate to AssetDetailsPage
   };
 
   useEffect(() => {
@@ -93,12 +92,7 @@ const Team = () => {
   };
 
   const columns = [
-    { field: "GD_id", headerName: "ID", flex: 1,
-    renderCell: (params) => (
-      <Link to={`/person-details/${params.row.GD_id}`}>
-        {params.row.GD_id}
-      </Link>
-    ) },
+    { field: "GD_id", headerName: "ID", flex: 1, },
     { field: "Name", headerName: "Name", flex: 1 },
     { field: "Email", headerName: "Email", flex: 1 },
     { field: "History", headerName: "History", flex: 1 },
