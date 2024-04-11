@@ -13,6 +13,7 @@ import Form from "./scenes/form";
 import AddAsset from "./scenes/addAsset";
 import Location from "./scenes/location";
 import SignIn from "./scenes/signIn";
+import SignUp from "./scenes/signUp";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -45,6 +46,7 @@ function App() {
           ) : (
             <Routes>
               <Route path="/signIn" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<Navigate to="/signIn" />} />
             </Routes>
           )}
