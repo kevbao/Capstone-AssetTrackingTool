@@ -8,6 +8,8 @@ import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import SecurityOutlinedIcon from "@mui/icons-material/SecurityOutlined";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from "@mui/icons-material/Edit";
+import { useNavigate, Link } from 'react-router-dom';
+import PersonDetails from '../../components/PersonDetails'
 
 const Team = () => {
   const theme = useTheme();
@@ -16,6 +18,12 @@ const Team = () => {
   const [members, setMembers] = useState([]);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editMemberData, setEditMemberData] = useState(null);
+  const navigate = useNavigate();
+  const [selectedPerson, setSelectedPerson] = useState(null);
+  const handleRowClick = (params) => {
+    setSelectedPerson(params.row);
+    navigate('/person-details', { state: { person: params.row } }); // Navigate to AssetDetailsPage
+  };
 
   useEffect(() => {
     fetchMembers();
@@ -85,7 +93,12 @@ const Team = () => {
   };
 
   const columns = [
-    { field: "GD_id", headerName: "ID", flex: 1 },
+    { field: "GD_id", headerName: "ID", flex: 1,
+    renderCell: (params) => (
+      <Link to={`/person-details/${params.row.GD_id}`}>
+        {params.row.GD_id}
+      </Link>
+    ) },
     { field: "Name", headerName: "Name", flex: 1 },
     { field: "Email", headerName: "Email", flex: 1 },
     { field: "History", headerName: "History", flex: 1 },
@@ -143,6 +156,7 @@ const Team = () => {
   return (
     <Box m="20px">
       <Header title="CURRENT USERS" subtitle="Managing the Team Members" />
+      {selectedPerson && <PersonDetails person={selectedPerson} />}
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -170,9 +184,11 @@ const Team = () => {
         }}
       >
         <DataGrid
-          rows={members}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
+           rows={members}
+           columns={columns}
+           components={{ Toolbar: GridToolbar }}
+           pageSize={10}
+           onRowClick={handleRowClick} // Call handleRowClick when a row is clicked
         />
       </Box>
       {/* Edit Member Dialog */}

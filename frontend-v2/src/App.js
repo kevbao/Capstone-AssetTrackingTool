@@ -13,6 +13,10 @@ import Form from "./scenes/form";
 import AddAsset from "./scenes/addAsset";
 import Location from "./scenes/location";
 import SignIn from "./scenes/signIn";
+import AssetDetails from "./components/AssetDetails";
+import PersonDetails from "./components/PersonDetails";
+import Calendar from "./scenes/calendar";
+import FAQPage from "./scenes/faq";
 
 function App() {
   const [theme, colorMode] = useMode();
@@ -38,7 +42,10 @@ function App() {
                   <Route path="/addAsset" element={<AddAsset />} />
                   <Route path="/location" element={<Location />} />
                   <Route path="/user-profile" element={<UserProfile />} />
-                  {/* Add other routes here */}
+                  <Route path ="/calendar" element={<Calendar />} />
+                  <Route path ="/faq" element={<FAQPage />} />
+                  <Route path="/asset-details" element={<AssetDetails/>} />
+                  <Route path="/person-details" element={<PersonDetails/>} />
                 </Routes>
               </main>
             </>

@@ -1,0 +1,20 @@
+.calendar-container {
+    margin: 0 auto; /* Center the container horizontally */
+    text-align: center; /* Center the content inside the container */
+  }
+  
+  .calendar {
+    width: 100%; /* Make the calendar fill its container */
+    border-collapse: collapse; /* Collapse the borders of the table */
+  }
+  
+  .calendar th,
+  .calendar td {
+    padding: 20px; /* Increase padding to make cells larger */
+    font-size: 20px; /* Increase font size */
+  }
+  
+  .calendar-header {
+    font-size: 24px; /* Increase font size for header cells */
+  }
+  

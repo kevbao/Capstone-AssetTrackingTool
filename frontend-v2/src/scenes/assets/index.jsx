@@ -6,6 +6,8 @@ import Header from "../../components/Header";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from "@mui/material";
+import { useNavigate, Link } from 'react-router-dom';
+import AssetDetails from '../../components/AssetDetails';
 
 const Asset = () => {
   const theme = useTheme();
@@ -17,6 +19,11 @@ const Asset = () => {
   const [openCheckoutDialog, setOpenCheckoutDialog] = useState(false);
   const [editAssetData, setEditAssetData] = useState(null);
   const [openEditDialog, setOpenEditDialog] = useState(false);
+  const navigate = useNavigate();
+  const [selectedAsset, setSelectedAsset] = useState(null);
+  const handleRowClick = (params) => {
+    setSelectedAsset(params.row);
+  };
 
   useEffect(() => {
     fetchAssetData();
@@ -132,7 +139,11 @@ const Asset = () => {
   };
 
   const columns = [
-    { field: "Asset_ID", headerName: "Asset ID", flex: 1 },
+    {
+      field: 'Asset_ID',
+      headerName: 'Asset ID',
+      flex: 1,
+    },
     { field: "Asset_Name", headerName: "Asset Name", flex: 1 },
     { field: "Asset_Tag", headerName: "Asset Tag", flex: 1 },
     { field: "VersionHistory", headerName: "Version History", flex: 1 },
@@ -186,6 +197,7 @@ const Asset = () => {
   return (
     <Box m="20px">
       <Header title="ASSET" subtitle="Managing Assets" />
+      {selectedAsset && selectedAsset.Asset_ID && <AssetDetails asset={selectedAsset} />}
       <Box
         m="40px 0 0 0"
         height="75vh"
@@ -216,11 +228,15 @@ const Asset = () => {
         }}
       >
         <DataGrid
-          rows={assetData}
-          columns={columns}
-          components={{ Toolbar: GridToolbar }}
-          pageSize={10}
-        />
+         rows={assetData}
+         columns={columns}
+         components={{ Toolbar: GridToolbar }}
+         pageSize={10}
+         onRowClick={handleRowClick} // Ensure onRowClick is setd
+      />
+      
+      {/* Render AssetDetails component if a row is selected */}
+      {selectedAsset && <AssetDetails asset={selectedAsset} />}
       </Box>
 
       {/* Checkout Dialog */}
