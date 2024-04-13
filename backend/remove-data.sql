@@ -10,7 +10,7 @@ DELETE FROM Member WHERE GD_id = 1;
 
 DROP TABLE History;
 DROP TABLE Accessory;
-DROP TABLE Location;
 DROP TABLE Asset;
+DROP TABLE Location;
 DROP TABLE Member;
 

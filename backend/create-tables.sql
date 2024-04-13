@@ -24,7 +24,8 @@ CREATE TABLE Member (
     Email VARCHAR(50),
     History VARCHAR(50),
     Department VARCHAR(50),
-    Manager VARCHAR(50)
+    Manager VARCHAR(50),
+    Password VARCHAR(50) NULL
 );
 
 CREATE TABLE Asset ( 

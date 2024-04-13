@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { ColorModeContext, useMode } from "./theme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
@@ -13,16 +13,22 @@ import Form from "./scenes/form";
 import AddAsset from "./scenes/addAsset";
 import Location from "./scenes/location";
 import SignIn from "./scenes/signIn";
-import AssetDetails from "./components/AssetDetails";
-import PersonDetails from "./components/PersonDetails";
+import SignUp from "./scenes/signUp";
 import Calendar from "./scenes/calendar";
 import FAQPage from "./scenes/faq";
 import IndivPieChart from "./scenes/pieChart";
+import AssetDetails from "./components/AssetDetails";
+import PersonDetails from "./components/PersonDetails";
 
 function App() {
   const [theme, colorMode] = useMode();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Updated to initialize as false
   const [isSidebar, setIsSidebar] = useState(true);
-  const isAuthenticated = true; // Replace this with your authentication logic
+
+  // Function to handle authentication status after login
+  const handleAuthentication = (status) => {
+    setIsAuthenticated(status);
+  };
 
   return (
     <ColorModeContext.Provider value={colorMode}>
@@ -43,17 +49,21 @@ function App() {
                   <Route path="/addAsset" element={<AddAsset />} />
                   <Route path="/location" element={<Location />} />
                   <Route path="/user-profile" element={<UserProfile />} />
-                  <Route path ="/calendar" element={<Calendar />} />
-                  <Route path ="/faq" element={<FAQPage />} />
-                  <Route path= "/pieChart" element={<IndivPieChart />} />
-                  <Route path="/asset-details" element={<AssetDetails/>} />
-                  <Route path="/person-details" element={<PersonDetails/>} />
+                  <Route path="/calendar" element={<Calendar />} />
+                  <Route path="/faq" element={<FAQPage />} />
+                  <Route path="/pieChart" element={<IndivPieChart />} />
+                  <Route path="/asset-details" element={<AssetDetails />} />
+                  <Route path="/person-details" element={<PersonDetails />} />
                 </Routes>
               </main>
             </>
           ) : (
             <Routes>
-              <Route path="/signIn" element={<SignIn />} />
+              <Route
+                path="/signIn"
+                element={<SignIn onLogin={handleAuthentication} />}
+              />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<Navigate to="/signIn" />} />
             </Routes>
           )}

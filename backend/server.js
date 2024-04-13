@@ -600,6 +600,63 @@ app.put('/checkinAsset/:assetID', (req, res) => {
     });
 });
 
+//Sign Up Endpoint
+app.post('/signup', (req, res) => {
+    const { name, email, password, id } = req.body;
+
+    // Check if the email exists in the members table with matching name and id
+    const checkMemberQuery = 'SELECT * FROM Member WHERE Email = ? AND Name = ? AND GD_id = ?';
+
+    db.query(checkMemberQuery, [email, name, id], (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+
+        if (result.length === 0) {
+            // User does not exist in the members table with matching name and id
+            return res.status(403).json({ error: 'You do not have permission to sign up.' });
+        }
+
+        // Email exists with matching name and id, update the corresponding member's password
+        const updatePasswordQuery = 'UPDATE Member SET Password = ? WHERE Email = ?';
+
+        db.query(updatePasswordQuery, [password, email], (updateErr, updateResult) => {
+            if (updateErr) {
+                console.error('Database query error:', updateErr);
+                return res.status(500).json({ error: 'Database query error' });
+            }
+
+            console.log('Password updated successfully.');
+            return res.status(200).json({ message: 'Password updated successfully' });
+        });
+    });
+});
+
+// Sign In Endpoint
+app.post('/signin', (req, res) => {
+    const { email, password } = req.body;
+
+    // Check if the email and password match in the members table
+    const checkCredentialsQuery = 'SELECT * FROM Member WHERE Email = ? AND Password = ?';
+
+    db.query(checkCredentialsQuery, [email, password], (err, result) => {
+        if (err) {
+            console.error('Database query error:', err);
+            return res.status(500).json({ error: 'Database query error' });
+        }
+
+        if (result.length === 0) {
+            // Email and password do not match
+            return res.status(401).json({ error: 'Incorrect email or password' });
+        }
+
+        // Email and password match, authentication successful
+        console.log('Authentication successful.');
+        return res.status(200).json({ message: 'Authentication successful' });
+    });
+});
+
 // Listen on Port 8081
 app.listen(port, ()=> {
     console.log("LISTENING")

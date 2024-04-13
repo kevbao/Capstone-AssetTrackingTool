@@ -1,4 +1,4 @@
-import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
 import { mockDataAsset, mockDataAccessory } from "../../data/mockData";
@@ -9,20 +9,20 @@ import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import StatBox from "../../components/StatBox";
 import QrCode2OutlinedIcon from "@mui/icons-material/QrCode2Outlined";
 import MapOutlinedIcon from "@mui/icons-material/MapOutlined";
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import * as echarts from 'echarts';
+import React, { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
+import * as echarts from "echarts";
 
 import {
   TitleComponent,
   ToolboxComponent,
   TooltipComponent,
   GridComponent,
-  LegendComponent
-} from 'echarts/components';
-import { LineChart } from 'echarts/charts';
-import { UniversalTransition } from 'echarts/features';
-import { CanvasRenderer } from 'echarts/renderers';
+  LegendComponent,
+} from "echarts/components";
+import { LineChart } from "echarts/charts";
+import { UniversalTransition } from "echarts/features";
+import { CanvasRenderer } from "echarts/renderers";
 
 echarts.use([
   TitleComponent,
@@ -32,7 +32,7 @@ echarts.use([
   LegendComponent,
   LineChart,
   CanvasRenderer,
-  UniversalTransition
+  UniversalTransition,
 ]);
 
 const Dashboard = () => {
@@ -41,6 +41,49 @@ const Dashboard = () => {
   const [activities, setActivities] = useState([]);
   const [checkedIn, setCheckedIn] = useState(0);
   const [checkedOut, setCheckedOut] = useState(0);
+  const [assetCount, setAssetCount] = useState(0);
+  const [accessoryCount, setAccessoryCount] = useState(0);
+  const [userCount, setUserCount] = useState(0);
+  const [locationCount, setLocationCount] = useState(0);
+
+  useEffect(() => {
+    // Fetch data for checked in/out counters and other counts
+    fetch("http://localhost:8081/Asset")
+      .then((res) => res.json())
+      .then((data) => {
+        const checkedInCount = data.filter(
+          (asset) => asset.Status === "Available"
+        ).length;
+        const checkedOutCount = data.filter(
+          (asset) => asset.Status === "In Use"
+        ).length;
+        setCheckedIn(checkedInCount);
+        setCheckedOut(checkedOutCount);
+        setAssetCount(data.length);
+      })
+      .catch((err) => console.error(err));
+
+    fetch("http://localhost:8081/Accessory")
+      .then((res) => res.json())
+      .then((data) => {
+        setAccessoryCount(data.length);
+      })
+      .catch((err) => console.error(err));
+
+    fetch("http://localhost:8081/Member")
+      .then((res) => res.json())
+      .then((data) => {
+        setUserCount(data.length);
+      })
+      .catch((err) => console.error(err));
+
+    fetch("http://localhost:8081/Location")
+      .then((res) => res.json())
+      .then((data) => {
+        setLocationCount(data.length);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   useEffect (() => {
     fetch('http://localhost:8081/History')
@@ -56,64 +99,51 @@ const Dashboard = () => {
   }, []);
 
   useEffect(() => {
-    // Fetch data for checked in/out counters
-    fetch('http://localhost:8081/Asset')
-      .then((res) => res.json())
-      .then((data) => {
-        const checkedInCount = data.filter(asset => asset.Status === "Available").length;
-        const checkedOutCount = data.filter(asset => asset.Status === "In Use").length;
-        setCheckedIn(checkedInCount);
-        setCheckedOut(checkedOutCount);
-      })
-      .catch((err) => console.error(err));
-  }, []);
-
-  useEffect(() => {
     // Initialize pie chart
-    const chartDom1 = document.getElementById('pieChart');
+    const chartDom1 = document.getElementById("pieChart");
     const pieChart = echarts.init(chartDom1);
     const pieOption = {
       tooltip: {
-        trigger: 'item'
+        trigger: "item",
       },
       legend: {
-        top: '5%',
-        left: 'center',
+        top: "5%",
+        left: "center",
         textStyle: {
-          color: '#ffffff'
-        }
+          color: "#ffffff",
+        },
       },
       series: [
         {
-          name: 'Assets',
-          type: 'pie',
-          radius: ['40%', '70%'],
+          name: "Assets",
+          type: "pie",
+          radius: ["40%", "70%"],
           avoidLabelOverlap: false,
           itemStyle: {
             borderRadius: 10,
-            borderColor: '#fff',
-            borderWidth: 2
+            borderColor: "#fff",
+            borderWidth: 2,
           },
           label: {
             show: false,
-            position: 'center'
+            position: "center",
           },
           emphasis: {
             label: {
               show: true,
               fontSize: 40,
-              fontWeight: 'bold'
-            }
+              fontWeight: "bold",
+            },
           },
           labelLine: {
-            show: false
+            show: false,
           },
           data: [
-            { value: checkedIn, name: 'Currently Checked In' },
-            { value: checkedOut, name: 'Currently Checked Out' }
-          ]
-        }
-      ]
+            { value: checkedIn, name: "Currently Checked In" },
+            { value: checkedOut, name: "Currently Checked Out" },
+          ],
+        },
+      ],
     };
     pieChart.setOption(pieOption);
 
@@ -124,50 +154,50 @@ const Dashboard = () => {
   }, [checkedIn, checkedOut]);
 
   useEffect(() => {
-    var chartDom2 = document.getElementById('lineChart');
+    var chartDom2 = document.getElementById("lineChart");
     var lineChart = echarts.init(chartDom2);
     var lineOption;
 
     lineOption = {
       title: {
-        text: 'Weekly Check Out Overview',
+        text: "Weekly Check Out Overview",
         textStyle: {
-          color: '#ffffff'
-        }
+          color: "#ffffff",
+        },
       },
       tooltip: {
-        trigger: 'axis'
+        trigger: "axis",
       },
       legend: {
-        data: ['Checked Out Assets']
+        data: ["Checked Out Assets"],
       },
       grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
+        left: "3%",
+        right: "4%",
+        bottom: "3%",
+        containLabel: true,
       },
       toolbox: {
         feature: {
-          saveAsImage: {}
-        }
+          saveAsImage: {},
+        },
       },
       xAxis: {
-        type: 'category',
+        type: "category",
         boundaryGap: false,
-        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       },
       yAxis: {
-        type: 'value'
+        type: "value",
       },
       series: [
         {
-          name: '# of Checked Out Assets',
-          type: 'line',
-          stack: 'Total',
-          data: [4, 10, 3, 6, 1, 0, 9]
-        }
-      ]
+          name: "# of Checked Out Assets",
+          type: "line",
+          stack: "Total",
+          data: [4, 10, 3, 6, 1, 0, 9],
+        },
+      ],
     };
 
     lineOption && lineChart.setOption(lineOption);
@@ -211,9 +241,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="5"
+            title={assetCount.toString()} // Display the true number of assets
             subtitle="ASSETS"
             viewAll="View All"
+            viewAllUrl="/assets"
             icon={
               <QrCode2OutlinedIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -229,9 +260,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="5"
+            title={accessoryCount.toString()} // Display the true number of accessories
             subtitle="ACCESSORIES"
             viewAll="View All"
+            viewAllUrl="/accessories"
             icon={
               <PointOfSaleIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -247,9 +279,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="9"
+            title={userCount.toString()} // Display the true number of users
             subtitle="USERS"
             viewAll="View All"
+            viewAllUrl="/team"
             icon={
               <PersonAddIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -265,9 +298,10 @@ const Dashboard = () => {
           justifyContent="center"
         >
           <StatBox
-            title="5"
+            title={locationCount.toString()} // Display the true number of locations
             subtitle="LOCATIONS"
             viewAll="View All"
+            viewAllUrl="/location"
             icon={
               <MapOutlinedIcon
                 sx={{ color: colors.greenAccent[600], fontSize: "26px" }}
@@ -277,101 +311,7 @@ const Dashboard = () => {
         </Box>
         {/*Recent Activity */}
         <Box
-            gridColumn="span 4"
-            gridRow="span 2"
-            backgroundColor={colors.primary[400]}
-            overflow="auto"
-          >
-            <Box
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              colors={colors.grey[100]}
-              p="15px"
-            >
-              <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-                Recent Activity
-              </Typography>
-            </Box>
-              {/* Recent Activities */}
-              {activities.slice().reverse().map((activity, index) => (
-                <Box
-                  key={activity.Action_Number}
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                  borderBottom={`4px solid ${colors.primary[500]}`}
-                  p="15px"
-                  sx={{
-                    fontWeight: index === 0 ? 'bold' : 'normal', // Bold font for most recent activity
-                    color: index === 0 ? colors.greenAccent[500] : colors.grey[100], // Green accent font for most recent activity
-                  }}
-                >
-                  <Box>
-                    <Typography color={index === 0 ? colors.greenAccent[500] : colors.grey[100]} fontWeight={index === 0 ? 'bold' : 'normal'}>
-                      {activity.Action_Description}
-                    </Typography>
-                  </Box>
-                  <Box color={index === 0 ? colors.greenAccent[500] : colors.grey[100]} fontWeight={index === 0 ? 'bold' : 'normal'}>
-                    {new Date(activity.DateTime).toLocaleString()}
-                  </Box>
-                </Box>
-              ))}
-          </Box>
-        <Box
-          gridColumn="span 4"
-          gridRow="span 2"
-          backgroundColor={colors.primary[400]}
-          overflow="auto"
-        >
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-            borderBottom={`4px solid ${colors.primary[500]}`}
-            colors={colors.grey[100]}
-            p="15px"
-          >
-            <Typography color={colors.grey[100]} variant="h5" fontWeight="600">
-              Assets
-            </Typography>
-          </Box>
-          {mockDataAsset.map((asset, i) => (
-            <Box
-              key={`${asset.id}-${i}`}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
-            >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {asset.assetName}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {asset.status === "Available" ? "Added" : "Removed"}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{asset.purchaseDate}</Box>
-              <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
-              >
-                {asset.assetTag}
-              </Box>
-            </Box>
-          ))}
-        </Box>
-
-        <Box
-          gridColumn="span 4"
+          gridColumn="span 12"
           gridRow="span 2"
           backgroundColor={colors.primary[400]}
           overflow="auto"
@@ -388,39 +328,46 @@ const Dashboard = () => {
               Recent Activity
             </Typography>
           </Box>
-          {mockDataAccessory.map((accessory, i) => (
-            <Box
-              key={`${accessory.id}-${i}`}
-              display="flex"
-              justifyContent="space-between"
-              alignItems="center"
-              borderBottom={`4px solid ${colors.primary[500]}`}
-              p="15px"
-            >
-              <Box>
-                <Typography
-                  color={colors.greenAccent[500]}
-                  variant="h5"
-                  fontWeight="600"
-                >
-                  {accessory.name}
-                </Typography>
-                <Typography color={colors.grey[100]}>
-                  {accessory.numCheckedOut > 0 ? "Checked Out" : "Added"}
-                </Typography>
-              </Box>
-              <Box color={colors.grey[100]}>{accessory.description}</Box>
+          {/* Recent Activities */}
+          {activities
+            .slice()
+            .reverse()
+            .map((activity, index) => (
               <Box
-                backgroundColor={colors.greenAccent[500]}
-                p="5px 10px"
-                borderRadius="4px"
+                key={activity.Action_Number}
+                display="flex"
+                justifyContent="space-between"
+                alignItems="center"
+                borderBottom={`4px solid ${colors.primary[500]}`}
+                p="15px"
+                sx={{
+                  fontWeight: index === 0 ? "bold" : "normal", // Bold font for most recent activity
+                  color:
+                    index === 0 ? colors.greenAccent[500] : colors.grey[100], // Green accent font for most recent activity
+                }}
               >
-                {accessory.model}
+                <Box>
+                  <Typography
+                    color={
+                      index === 0 ? colors.greenAccent[500] : colors.grey[100]
+                    }
+                    fontWeight={index === 0 ? "bold" : "normal"}
+                  >
+                    {activity.Action_Description}
+                  </Typography>
+                </Box>
+                <Box
+                  color={
+                    index === 0 ? colors.greenAccent[500] : colors.grey[100]
+                  }
+                  fontWeight={index === 0 ? "bold" : "normal"}
+                >
+                  {new Date(activity.DateTime).toLocaleString()}
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
         </Box>
-      </Box>
+        </Box>
         {/* Box with ECharts */}
         <Box
           gridColumn="span 6" // Spans half the width of the grid
@@ -435,19 +382,19 @@ const Dashboard = () => {
           <Box
             style={{ flex: 1 }} // Make the box flexible to occupy available space
           >
-            <div id="pieChart" style={{ width: '100%', height: '300px' }}></div>
+            <div id="pieChart" style={{ width: "100%", height: "300px" }}></div>
           </Box>
-          
+
           {/* Line Chart */}
           <Box
-            style={{ flex: 1, marginLeft: '20px' }} // Add margin to separate the charts
+            style={{ flex: 1, marginLeft: "20px" }} // Add margin to separate the charts
           >
-            <div id="lineChart" style={{ width: '100%', height: '300px' }}></div>
+            <div id="lineChart" style={{ width: "100%", height: "300px" }}></div>
           </Box>
         </Box>
-
-    </Box>
-  );
-};
+      </Box>
+    );
+  };
 
 export default Dashboard;
+

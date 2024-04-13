@@ -1,8 +1,9 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import { tokens } from "../theme";
 //import ProgressCircle from "./ProgressCircle";
+import { Link as RouterLink } from "react-router-dom";
 
-const StatBox = ({ title, subtitle, icon, progress, viewAll }) => {
+const StatBox = ({ title, subtitle, icon, progress, viewAll, viewAllUrl }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
@@ -19,23 +20,22 @@ const StatBox = ({ title, subtitle, icon, progress, viewAll }) => {
             {title}
           </Typography>
         </Box>
-        
       </Box>
       <Box display="flex" justifyContent="space-between" mt="2px">
         <Typography variant="h5" sx={{ color: colors.greenAccent[500] }}>
           {subtitle}
         </Typography>
-        
       </Box>
 
       <Typography
-          variant="h5"
-          fontStyle="italic"
-          sx={{ color: colors.greenAccent[600] }}
-        >
+        variant="h5"
+        fontStyle="italic"
+        sx={{ color: colors.greenAccent[600] }}
+      >
+        <RouterLink to={viewAllUrl} style={{ color: colors.greenAccent[600] }}>
           {viewAll}
-        </Typography>
-      
+        </RouterLink>
+      </Typography>
     </Box>
   );
 };

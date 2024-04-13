@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { Box, Button, TextField, Typography } from "@mui/material";
 
-const LoginPage = ({ onLogin }) => {
+const SignupPage = () => {
   const [formData, setFormData] = useState({
+    name: "",
     email: "",
     password: "",
+    confirmPassword: "",
+    id: "",
   });
   const [error, setError] = useState("");
-  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,37 +22,58 @@ const LoginPage = ({ onLogin }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+  
     try {
-      const response = await fetch("http://localhost:8081/signin", {
+      const response = await fetch("http://localhost:8081/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
       });
-      const data = await response.json();
-
+  
+      // Check if the response status is in the success range
       if (response.ok) {
-        // Call onLogin function with true to indicate successful login
-        onLogin(true);
-        // Redirect to the dashboard page after successful login
-        navigate("/");
+        // Reset form data on successful sign-up
+        setFormData({
+          name: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          id: "",
+        });
+        setError(""); // Clear any previous error messages
+        console.log("User signed up successfully");
       } else {
         // Handle error response from the server
-        setError(data.error || "Incorrect email or password. Please try again.");
+        const data = await response.json();
+        setError(data.error || "An error occurred. Please try again later.");
       }
     } catch (error) {
       console.error("Error:", error);
       setError("An error occurred. Please try again later.");
     }
   };
+  
 
   return (
     <Box sx={{ maxWidth: 400, mx: "auto", mt: 4 }}>
       <Typography variant="h4" align="center" gutterBottom>
-        Login
+        Create Account
       </Typography>
       <form onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+        />
         <TextField
           fullWidth
           margin="normal"
@@ -69,6 +92,24 @@ const LoginPage = ({ onLogin }) => {
           value={formData.password}
           onChange={handleInputChange}
         />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="Confirm Password"
+          name="confirmPassword"
+          type="password"
+          value={formData.confirmPassword}
+          onChange={handleInputChange}
+        />
+        <TextField
+          fullWidth
+          margin="normal"
+          label="ID (Numbers only)"
+          name="id"
+          type="number"
+          value={formData.id}
+          onChange={handleInputChange}
+        />
         {error && (
           <Typography
             variant="body2"
@@ -80,15 +121,14 @@ const LoginPage = ({ onLogin }) => {
           </Typography>
         )}
         <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-          Login
+          Create Account
         </Button>
       </form>
       <Typography variant="body2" align="center" sx={{ mt: 2 }}>
-        Don't have an account? <RouterLink to="/signup">Create one</RouterLink>
+        Already have an account? <RouterLink to="/login">Login</RouterLink>
       </Typography>
     </Box>
   );
 };
 
-export default LoginPage;
-
+export default SignupPage;
